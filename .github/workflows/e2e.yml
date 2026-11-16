@@ -7,7 +7,6 @@ on:
       - 'style.css'
       - 'auth.js'
       - 'script.js'
-      - 'manifest.webmanifest'
       - 'tests/**'
       - 'playwright.config.js'
       - 'package.json'
