@@ -117,9 +117,10 @@
     if(error){console.warn('Torneos:',error.message);return;}
     const {data:counts}=await client.rpc('get_tournament_counts');
     let joinedIds=new Set();if(currentUser){const {data:joined}=await client.from('tournament_registrations').select('tournament_id').eq('user_id',currentUser.id);(joined||[]).forEach(row=>joinedIds.add(row.tournament_id));}
-    const cards=[...document.querySelectorAll('.game-card')];
-    for(let i=0;i<Math.min(cards.length,data.length);i++){
-      const item=data[i],card=cards[i],button=card.querySelector('.join-btn');
+    const cards=[...document.querySelectorAll('.game-card:not([data-user-created])')];
+    const seeded=data.filter(item=>!item.slug.startsWith('user-'));
+    for(let i=0;i<Math.min(cards.length,seeded.length);i++){
+      const item=seeded[i],card=cards[i],button=card.querySelector('.join-btn');
       card.dataset.platform=item.platform;
       const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registered||0;
       card.querySelector('h3').textContent=item.title;
@@ -139,6 +140,22 @@
       };
     }
   }
+    const userTournaments=data.filter(item=>item.slug.startsWith('user-'));
+    const dynamicHost=document.getElementById('community-tournaments');
+    if(dynamicHost){
+      dynamicHost.innerHTML=userTournaments.map(item=>{
+        const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registered||0;
+        return '<article class="game-card community-card" data-user-created="true"><div class="game-visual"><span class="game-symbol">✦</span><span class="game-label">COMUNIDAD PLAYFORJA</span></div><div class="card-content"><span class="pill">'+escapeHtml(item.platform)+' · '+escapeHtml(item.mode)+'</span><h3>'+escapeHtml(item.title)+'</h3><p>Torneo creado por un jugador de la comunidad.</p><div class="card-meta"><span>Cupos</span><b>'+count+' de '+item.capacity+' anotados</b></div><button class="btn btn-gold full community-join" data-id="'+item.id+'" '+(item.status!=='open'?'disabled':'')+'>'+(item.status==='full'?'Torneo lleno':'UNIRSE')+'</button></div></article>';
+      }).join('');
+      dynamicHost.querySelectorAll('.community-join').forEach(button=>button.addEventListener('click',async()=>{
+        if(!await requireLogin())return;
+        button.disabled=true;
+        const {data:result,error}=await client.rpc('join_tournament',{p_tournament_id:button.dataset.id});
+        if(error){notifyError(error.message);button.disabled=false;return;}
+        showToast(result.already_joined?'Ya estabas anotado.':'Te uniste al torneo.');
+        await loadTournaments();
+      }));
+    }
   function notifyError(message){showToast(message.includes('TOURNAMENT_FULL')?'Torneo lleno.':message.includes('INSUFFICIENT_PF')?'No te alcanza el saldo de Monedas PF.':'No se pudo completar la acción: '+message);}
   async function loadFrames(){
     const {data,error}=await client.from('frames').select('*').eq('active',true).order('price_pf');
@@ -190,6 +207,19 @@
       };
     }
   }
+
+  const createTournamentButton=document.getElementById('create-tournament');
+  if(createTournamentButton)createTournamentButton.addEventListener('click',async()=>{
+    if(!await requireLogin())return;
+    const game=document.getElementById('game-choice')?.value||'Torneo comunitario';
+    const platform=document.querySelector('.platform.active')?.dataset.platform||'PC';
+    createTournamentButton.disabled=true;
+    const {data,error}=await client.rpc('create_tournament',{p_game:game,p_platform:platform});
+    if(error){showToast(error.message.includes('TOO_MANY_OPEN_TOURNAMENTS')?'Ya tenés tres torneos abiertos. Cerrá uno antes de crear otro.':'No se pudo crear el torneo: '+error.message);createTournamentButton.disabled=false;return;}
+    showToast('Torneo creado: '+data.title+'. Ya aparece en la lista de la comunidad.');
+    createTournamentButton.disabled=false;
+    await loadTournaments();
+  });
 
   let missionCategory='daily',missionCache=[];
   async function loadMissions(){
