@@ -9,7 +9,8 @@ test('la portada carga datos de prueba reales desde Supabase sin inventar activi
   await expect(page.locator('#salas .room-card').filter({ hasText: 'Torneo Nocturno' }).locator('.status')).toContainText('MUESTRA');
   await expect(page.locator('#marcos .frame-card').first().locator('b')).toContainText('PF');
   await expect(page.locator('#streaming')).toContainText('PRÓXIMAMENTE');
-  await expect(page.locator('#streaming')).toContainText('todavía no conectado');
+  await expect(page.locator('#streaming')).toContainText('proveedor autorizado');
+  await expect(page.locator('#streaming')).toContainText('audiencia aparecerán únicamente');
 });
 
 test('los filtros de plataforma cambian los torneos visibles', async ({ page }) => {
