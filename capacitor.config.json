@@ -1,9 +1,0 @@
-{
-  "appId": "com.playforja.app",
-  "appName": "PLAYFORJA",
-  "webDir": "www",
-  "bundledWebRuntime": false,
-  "server": {
-    "androidScheme": "https"
-  }
-}
