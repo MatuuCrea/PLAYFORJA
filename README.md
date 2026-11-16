@@ -76,3 +76,5 @@ Tipos aceptados: `win`, `elimination`, `team_minute`, `room_game`, `tournament_j
 - Se agregó un wrapper nativo con Capacitor 8.6.2, dependencias fijadas y configuración `com.playforja.app`.
 - El workflow `Build PLAYFORJA Android APK` compila un APK de depuración y lo publica como artefacto de GitHub Actions durante 14 días.
 - El APK de depuración sirve para instalación y pruebas internas; no es una versión firmada de producción ni una publicación en Play Store. La firma de release requiere un keystore privado que no debe guardarse en el repositorio.
+
+- La política de inserción de evidencias solo permite crear registros propios con `validated = false`; la validación queda reservada a una operación administrativa confiable.
