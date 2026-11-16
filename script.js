@@ -23,23 +23,9 @@
     menuToggle.textContent = '☰';
   }));
 
-  document.querySelectorAll('.join-btn').forEach(button => button.addEventListener('click', () => {
-    if (!button.disabled) notify(button.dataset.item + ': la inscripción estará disponible desde la app oficial.');
-  }));
-
   document.querySelectorAll('.platform').forEach(button => button.addEventListener('click', () => {
     document.querySelectorAll('.platform').forEach(item => item.classList.remove('active'));
     button.classList.add('active');
-  }));
-
-  document.getElementById('create-tournament').addEventListener('click', () => {
-    const game = document.getElementById('game-choice').value;
-    const platform = document.querySelector('.platform.active').dataset.platform;
-    notify('Configuración preparada: ' + game + ' · ' + platform + '. La creación real requiere el servicio de PLAYFORJA.');
-  });
-
-  document.querySelectorAll('.buy-btn').forEach(button => button.addEventListener('click', () => {
-    notify(button.dataset.frame + ': vista de tienda demostrativa. Las compras se habilitarán con la cuenta PLAYFORJA.');
   }));
 
   const search = document.getElementById('room-search');
