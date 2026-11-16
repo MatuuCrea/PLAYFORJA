@@ -8,7 +8,8 @@
     toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
   }
 
-  document.getElementById('year').textContent = new Date().getFullYear();
+  const yearElement = document.getElementById('year');
+  if (yearElement) yearElement.textContent = new Date().getFullYear();
 
   const menuToggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.main-nav');
