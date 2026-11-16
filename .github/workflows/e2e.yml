@@ -19,7 +19,7 @@ permissions:
   contents: read
 jobs:
   chromium-e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       PLAYFORJA_E2E_EMAIL: ${{ secrets.PLAYFORJA_E2E_EMAIL }}
