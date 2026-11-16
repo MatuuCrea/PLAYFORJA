@@ -70,3 +70,9 @@ Tipos aceptados: `win`, `elimination`, `team_minute`, `room_game`, `tournament_j
 - Se agregaron páginas iniciales de privacidad, términos y soporte. Son borradores: antes del lanzamiento público deben completarse datos del responsable, contacto privado, retención y revisión legal.
 
 - Migraciones aplicadas y versionadas para las correcciones recientes: `20261116182546_lock_profile_economy_fields` y `20261116182900_use_current_jwt_role_claim_for_game_events`.
+
+## Compilación Android
+
+- Se agregó un wrapper nativo con Capacitor 8.6.2, dependencias fijadas y configuración `com.playforja.app`.
+- El workflow `Build PLAYFORJA Android APK` compila un APK de depuración y lo publica como artefacto de GitHub Actions durante 14 días.
+- El APK de depuración sirve para instalación y pruebas internas; no es una versión firmada de producción ni una publicación en Play Store. La firma de release requiere un keystore privado que no debe guardarse en el repositorio.
