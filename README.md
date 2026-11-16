@@ -47,16 +47,16 @@ Tipos aceptados: `win`, `elimination`, `team_minute`, `room_game`, `tournament_j
 2. Probar registro, confirmación de correo, login, logout, cupos y compras con cuentas de prueba.
 3. Conectar el backend real de cada juego/partida al endpoint de eventos verificados. Hasta entonces, el progreso de misiones queda correctamente bloqueado y no se falsifica desde el cliente.
 4. GitHub Pages sirve archivos estáticos: las operaciones de datos están protegidas por Auth/RLS, pero una página estática no puede ocultar sus propios archivos ni implementar protección SSR de rutas. Las vistas privadas deben seguir comprobando la sesión y los datos sensibles siempre deben pasar por RLS/funciones de servidor.
-5. No hay todavía un APK/instalador ni un enlace de descarga real configurado. No mostrar una descarga ficticia.
+5. La página no ofrece APK ni instalador; solo informa que la aplicación llegará próximamente.
 
 
 
-## Aplicación instalable (PWA)
+## Entrega exclusivamente web
 
-- Manifiesto web, icono SVG y service worker para cachear el shell estático.
-- En navegadores compatibles y bajo HTTPS, Android y desktop pueden ofrecer Instalar PLAYFORJA.
-- La PWA no es un APK nativo: las funciones que requieren Supabase necesitan conexión. No se declara soporte offline para cuentas, compras, torneos o misiones.
-- El catálogo de GitHub Releases sigue disponible, pero todavía no hay un APK/instalador publicado.
+- PLAYFORJA se entrega como sitio web estático en GitHub Pages.
+- No se genera APK, proyecto Android, Capacitor, PWA instalable ni instalador de escritorio.
+- El bloque de descarga informa **La App llega pronto**. Cuando el propietario entregue una aplicación oficial en el futuro, sus instaladores verificados podrán publicarse desde esta misma página.
+- La página se adapta a PC, móvil y tablet sin ofrecer instalación de una aplicación inexistente.
 
 ## Seguridad adicional
 
@@ -66,16 +66,10 @@ Tipos aceptados: `win`, `elimination`, `team_minute`, `room_game`, `tournament_j
 
 ## Calidad y documentos
 
-- GitHub Actions valida sintaxis JavaScript, JSON del manifiesto y puntos esenciales de la PWA.
+- GitHub Actions valida sintaxis JavaScript y comprueba que el repositorio siga siendo exclusivamente web.
 - Se agregaron páginas iniciales de privacidad, términos y soporte. Son borradores: antes del lanzamiento público deben completarse datos del responsable, contacto privado, retención y revisión legal.
 
 - Migraciones aplicadas y versionadas para las correcciones recientes: `20261116182546_lock_profile_economy_fields` y `20261116182900_use_current_jwt_role_claim_for_game_events`.
-
-## Compilación Android
-
-- Se agregó un wrapper nativo con Capacitor 8.6.2, dependencias fijadas y configuración `com.playforja.app`.
-- El workflow `Build PLAYFORJA Android APK` compila un APK de depuración y lo publica como artefacto de GitHub Actions durante 14 días.
-- El APK de depuración sirve para instalación y pruebas internas; no es una versión firmada de producción ni una publicación en Play Store. La firma de release requiere un keystore privado que no debe guardarse en el repositorio.
 
 - La política de inserción de evidencias solo permite crear registros propios con `validated = false`; la validación queda reservada a una operación administrativa confiable.
 
