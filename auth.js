@@ -115,14 +115,14 @@
   async function loadTournaments(){
     const {data,error}=await client.from('tournaments').select('*').order('created_at');
     if(error){console.warn('Torneos:',error.message);document.querySelectorAll('.game-card .join-btn').forEach(b=>{b.disabled=true;b.textContent='No disponible';});const host=document.getElementById('community-tournaments');if(host)host.innerHTML='<p class="empty-state">No se pudieron cargar los torneos reales. Revisá la conexión e intentá nuevamente.</p>';return;}
-    const {data:counts}=await client.rpc('get_tournament_counts');
+    const {data:counts,countError}=await client.from('tournament_public_counts').select('tournament_id,registration_count');
     let joinedIds=new Set();if(currentUser){const {data:joined}=await client.from('tournament_registrations').select('tournament_id').eq('user_id',currentUser.id);(joined||[]).forEach(row=>joinedIds.add(row.tournament_id));}
     const cards=[...document.querySelectorAll('.game-card:not([data-user-created])')];
     const seeded=data.filter(item=>!item.slug.startsWith('user-'));
     for(let i=0;i<Math.min(cards.length,seeded.length);i++){
       const item=seeded[i],card=cards[i],button=card.querySelector('.join-btn');
       card.dataset.platform=item.platform;
-      const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registered||0;
+      const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registration_count||0;
       card.querySelector('h3').textContent=item.title;
       card.querySelector('.pill').textContent=(item.is_demo?'MUESTRA · ':'')+item.platform+' · '+item.mode;
       card.querySelector('.card-meta span').textContent='Inscripciones';
@@ -189,7 +189,7 @@
   async function loadRooms(){
     const {data,error}=await client.from('rooms').select('*').order('created_at');
     if(error){console.warn('Salas:',error.message);document.getElementById('room-list').innerHTML='<p class="empty-state">No se pudieron cargar las salas reales. Revisá la conexión e intentá nuevamente.</p>';return;}
-    const {data:counts}=await client.rpc('get_room_counts');
+    const {data:counts,countError}=await client.from('room_public_counts').select('room_id,member_count');
     let joinedRooms=new Set();if(currentUser){const {data:joined}=await client.from('room_members').select('room_id').eq('user_id',currentUser.id);(joined||[]).forEach(row=>joinedRooms.add(row.room_id));}
     const cards=[...document.querySelectorAll('.room-card')];
     for(let i=0;i<Math.min(cards.length,data.length);i++){
@@ -197,7 +197,7 @@
       if(!button) continue;
       card.querySelector('h3').textContent=item.name;
       card.querySelector('p').textContent=item.description;
-      const count=(counts||[]).find(row=>row.room_id===item.id)?.members||0;
+      const count=(counts||[]).find(row=>row.room_id===item.id)?.member_count||0;
       card.querySelector('small').textContent=(count||0)+' de '+item.capacity+' jugadores'+(item.is_demo?' · sala de muestra':'');
       const statusBadge=card.querySelector('.status');
       if(statusBadge){statusBadge.textContent=item.is_demo?'● MUESTRA':item.status==='open'?'● ABIERTA':item.status==='full'?'● COMPLETA':'● CERRADA';statusBadge.classList.toggle('live',item.status==='open');statusBadge.classList.toggle('waiting',item.status!=='open');}
