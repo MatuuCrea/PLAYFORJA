@@ -105,10 +105,11 @@
   async function loadTournaments(){
     const {data,error}=await client.from('tournaments').select('*').order('created_at');
     if(error){console.warn('Torneos:',error.message);return;}
+    const {data:counts}=await client.rpc('get_tournament_counts');
     const cards=[...document.querySelectorAll('.game-card')];
     for(let i=0;i<Math.min(cards.length,data.length);i++){
       const item=data[i],card=cards[i],button=card.querySelector('.join-btn');
-      const {count}=await client.from('tournament_registrations').select('id',{count:'exact',head:true}).eq('tournament_id',item.id);
+      const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registered||0;
       card.querySelector('h3').textContent=item.title;
       card.querySelector('.pill').textContent=item.platform+' · '+item.mode;
       card.querySelector('.card-meta b').textContent=(count||0)+' de '+item.capacity+' anotados';
@@ -158,13 +159,14 @@
   async function loadRooms(){
     const {data,error}=await client.from('rooms').select('*').order('created_at');
     if(error){console.warn('Salas:',error.message);return;}
+    const {data:counts}=await client.rpc('get_room_counts');
     const cards=[...document.querySelectorAll('.room-card')];
     for(let i=0;i<Math.min(cards.length,data.length);i++){
       const item=data[i],card=cards[i],button=card.querySelector('.join-btn');
       if(!button) continue;
       card.querySelector('h3').textContent=item.name;
       card.querySelector('p').textContent=item.description;
-      const {count}=await client.from('room_members').select('user_id',{count:'exact',head:true}).eq('room_id',item.id);
+      const count=(counts||[]).find(row=>row.room_id===item.id)?.members||0;
       card.querySelector('small').textContent=(count||0)+' de '+item.capacity+' jugadores';
       button.textContent=item.status==='full'?'Sala llena':'Unirse';
       button.disabled=item.status!=='open';
