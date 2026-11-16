@@ -10,7 +10,7 @@ test('la portada carga datos de prueba reales desde Supabase sin inventar activi
   await expect(page.locator('#marcos .frame-card').first().locator('b')).toContainText('PF');
   await expect(page.locator('#streaming')).toContainText('PRÓXIMAMENTE');
   await expect(page.locator('#streaming')).toContainText('proveedor autorizado');
-  await expect(page.locator('#streaming')).toContainText('audiencia aparecerán únicamente');
+  await expect(page.locator('#streaming')).toContainText('No mostramos espectadores ficticios');
 });
 
 test('los filtros de plataforma cambian los torneos visibles', async ({ page }) => {
@@ -55,4 +55,24 @@ test('inicio de sesión con cuenta de prueba cuando existen credenciales protegi
   await page.locator('.auth-modal input[name="password"]').fill(password);
   await page.locator('.auth-modal form [type="submit"]').click();
   await expect.poll(() => page.evaluate(() => window.PLAYFORJA?.getUser()?.email), { timeout: 30000 }).toBe(email);
+});
+
+test('la web no muestra controles de instalación ni recursos de app', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#descargar')).toContainText('LA APP');
+  await expect(page.locator('#descargar')).toContainText('LLEGA PRONTO');
+  await expect(page.locator('a,button')).not.toContainText('Instalar PLAYFORJA');
+  await expect(page.locator('link[rel="manifest"]')).toHaveCount(0);
+  await expect(page.locator('#fairplay-dialog')).toBeAttached();
+  await page.locator('[data-open-fairplay]').click();
+  await expect(page.locator('#fairplay-dialog')).toBeVisible();
+  await expect(page.locator('#fairplay-dialog')).toContainText('Sin plata real');
+});
+
+test('el plano mantiene las secciones y el orden de navegación solicitados', async ({ page }) => {
+  await page.goto('/');
+  for (const id of ['inicio','torneos','salas','misiones','marcos','temporadas','streaming','idiomas','evidencia','mapa','descargar']) {
+    await expect(page.locator('#'+id)).toHaveCount(1);
+  }
+  await expect(page.locator('.main-nav a').filter({hasText:'La App llega pronto'})).toHaveAttribute('href','#descargar');
 });
