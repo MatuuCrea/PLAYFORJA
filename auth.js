@@ -64,7 +64,7 @@
       if(mode==='signup'){
         const usernameValue=String(data.get('username')||'').trim();
         if(usernameValue.length<3) throw new Error('El nombre de jugador debe tener al menos 3 caracteres.');
-        const {data:result,error}=await client.auth.signUp({email,password,options:{data:{username:usernameValue}}});
+        const {data:result,error}=await client.auth.signUp({email,password,options:{data:{username:usernameValue},emailRedirectTo:new URL('./',window.location.href).toString()}});
         if(error) throw error;
         if(result.session){message('Cuenta creada. Ya podés entrar a PLAYFORJA.');}
         else message('Te enviamos un correo para confirmar tu cuenta. Revisá tu bandeja de entrada.');
@@ -105,24 +105,28 @@
     document.querySelectorAll('.balance strong').forEach(el=>el.textContent=Number(data.pf_balance).toLocaleString('es-AR')+' PF');
     const xp=Number(data.xp)||0,levels=[['BRONCE',0],['PLATA',500],['ORO',1200],['PLATINO',1750],['DIAMANTE',2500],['LEYENDA',3500]];
     let rank=0;for(let i=0;i<levels.length;i++)if(xp>=levels[i][1])rank=i;
-    const next=levels[Math.min(rank+1,levels.length-1)],base=levels[rank][1],pct=rank===levels.length-1?100:Math.max(0,Math.min(100,Math.round((xp-base)/(next[1]-base)*100)));
+    const next=levels[Math.min(rank+1,levels.length-1)],pct=rank===levels.length-1?100:Math.max(0,Math.min(100,Math.round(xp/next[1]*100)));
     const rankTitle=document.querySelector('.rank-top h3'),rankPct=document.querySelector('.rank-top>strong'),rankBar=document.querySelector('.progress-track span');
     if(rankTitle)rankTitle.textContent=levels[rank][0]+' → '+next[0];if(rankPct)rankPct.innerHTML=pct+'<small>%</small>';if(rankBar)rankBar.style.width=pct+'%';
     document.querySelectorAll('.rank-labels span').forEach((el,i)=>el.classList.toggle('current',i===rank));
+    document.querySelectorAll('.rank-badges span').forEach((el,i)=>el.classList.toggle('current',i===rank));
+    const progressNumber=document.querySelector('.progress-number');
+    if(progressNumber)progressNumber.textContent=Number(xp).toLocaleString('es-AR')+' de '+Number(next[1]).toLocaleString('es-AR')+' XP · '+pct+'%';
     const credits=document.querySelector('.credits-line');
     if(credits) credits.innerHTML='<span>MONEDAS PF <strong>'+Number(data.pf_balance).toLocaleString('es-AR')+'</strong></span><span>XP <strong>'+Number(data.xp).toLocaleString('es-AR')+'</strong></span>';
   }
   async function loadTournaments(){
     const {data,error}=await client.from('tournaments').select('*').order('created_at');
     if(error){console.warn('Torneos:',error.message);document.querySelectorAll('.game-card .join-btn').forEach(b=>{b.disabled=true;b.textContent='No disponible';});const host=document.getElementById('community-tournaments');if(host)host.innerHTML='<p class="empty-state">No se pudieron cargar los torneos reales. Revisá la conexión e intentá nuevamente.</p>';return;}
-    const {data:counts}=await client.rpc('get_tournament_counts');
+    const {data:counts,countError}=await client.from('tournament_public_counts').select('tournament_id,registration_count');
     let joinedIds=new Set();if(currentUser){const {data:joined}=await client.from('tournament_registrations').select('tournament_id').eq('user_id',currentUser.id);(joined||[]).forEach(row=>joinedIds.add(row.tournament_id));}
     const cards=[...document.querySelectorAll('.game-card:not([data-user-created])')];
     const seeded=data.filter(item=>!item.slug.startsWith('user-'));
     for(let i=0;i<Math.min(cards.length,seeded.length);i++){
       const item=seeded[i],card=cards[i],button=card.querySelector('.join-btn');
-      card.dataset.platform=item.platform;
-      const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registered||0;
+      const rawPlatform=String(item.platform||'').toLocaleLowerCase('es');
+      card.dataset.platform=rawPlatform.includes('pc')?'PC':rawPlatform.includes('tablet')?'Tablet':rawPlatform.includes('mov')||rawPlatform.includes('mobile')?'Móvil':item.platform;
+      const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registration_count||0;
       card.querySelector('h3').textContent=item.title;
       card.querySelector('.pill').textContent=(item.is_demo?'MUESTRA · ':'')+item.platform+' · '+item.mode;
       card.querySelector('.card-meta span').textContent='Inscripciones';
@@ -143,9 +147,11 @@
     }
     const userTournaments=data.filter(item=>item.slug.startsWith('user-'));
     const dynamicHost=document.getElementById('community-tournaments');
+    const activeFilter=document.querySelector('[data-platform-filter].active')?.dataset.platformFilter;
+    if(activeFilter) document.querySelectorAll('.game-card').forEach(card=>{card.hidden=card.dataset.platform!==activeFilter;});
     if(dynamicHost){
       dynamicHost.innerHTML=userTournaments.map(item=>{
-        const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registered||0;
+        const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registration_count||0;
         return '<article class="game-card community-card" data-platform="'+escapeHtml(item.platform)+'" data-user-created="true"><div class="game-visual"><span class="game-symbol">✦</span><span class="game-label">COMUNIDAD PLAYFORJA</span></div><div class="card-content"><span class="pill">'+escapeHtml(item.platform)+' · '+escapeHtml(item.mode)+'</span><h3>'+escapeHtml(item.title)+'</h3><p>Torneo creado por un jugador de la comunidad.</p><div class="card-meta"><span>Cupos</span><b>'+count+' de '+item.capacity+' anotados</b></div><button class="btn btn-gold full community-join" data-id="'+item.id+'" '+(item.status!=='open'?'disabled':'')+'>'+(item.status==='full'?'Torneo lleno':'UNIRSE')+'</button></div></article>';
       }).join('');
       dynamicHost.querySelectorAll('.community-join').forEach(button=>button.addEventListener('click',async()=>{
@@ -170,26 +176,33 @@
     const frameCardClass={'marco-leyenda':'frame-legend','marco-fuego':'frame-fire','marco-oro':'frame-gold','marco-diamante':'frame-diamond'};
     for(const item of (data||[])){
       const preview=document.querySelector('.'+frameCardClass[item.slug]);
-      const card=preview?.closest('.frame-card');if(!card)continue;
-      const button=card.querySelector('.buy-btn');
-      card.querySelector('h3').textContent=item.name;
-      card.querySelector('b').textContent=Number(item.price_pf).toLocaleString('es-AR')+' PF';
-      button.textContent=owned.has(item.id)?'Desbloqueado':'CANJEAR';
-      button.disabled=owned.has(item.id);
-      button.onclick=async()=>{
-        if(!await requireLogin()) return;
-        button.disabled=true;
-        const {data:result,error:buyError}=await client.rpc('purchase_frame',{p_frame_id:item.id});
-        if(buyError){notifyError(buyError.message);button.disabled=false;return;}
-        showToast(result.already_owned?'Ese marco ya es tuyo.':'Marco desbloqueado.');
-        await refreshProfile();await loadFrames();
-      };
+      const card=preview?.closest('.frame-card');
+      if(card){
+        card.querySelector('h3').textContent=item.name;
+        const price=card.querySelector('b');if(price)price.textContent=Number(item.price_pf).toLocaleString('es-AR')+' PF';
+      }
+      document.querySelectorAll('.mini-frame').forEach(mini=>{
+        if(mini.querySelector('[data-frame="'+item.name+'"]')) mini.querySelector('small').textContent=Number(item.price_pf).toLocaleString('es-AR')+' PF';
+      });
+      const buttons=[...document.querySelectorAll('.buy-btn')].filter(button=>button.dataset.frame===item.name);
+      for(const button of buttons){
+        button.textContent=owned.has(item.id)?'Desbloqueado':'CANJEAR';
+        button.disabled=owned.has(item.id);
+        button.onclick=async()=>{
+          if(!await requireLogin()) return;
+          button.disabled=true;
+          const {data:result,error:buyError}=await client.rpc('purchase_frame',{p_frame_id:item.id});
+          if(buyError){notifyError(buyError.message);button.disabled=false;return;}
+          showToast(result.already_owned?'Ese marco ya es tuyo.':'Marco desbloqueado.');
+          await refreshProfile();await loadFrames();
+        };
+      }
     }
   }
   async function loadRooms(){
     const {data,error}=await client.from('rooms').select('*').order('created_at');
     if(error){console.warn('Salas:',error.message);document.getElementById('room-list').innerHTML='<p class="empty-state">No se pudieron cargar las salas reales. Revisá la conexión e intentá nuevamente.</p>';return;}
-    const {data:counts}=await client.rpc('get_room_counts');
+    const {data:counts,countError}=await client.from('room_public_counts').select('room_id,member_count');
     let joinedRooms=new Set();if(currentUser){const {data:joined}=await client.from('room_members').select('room_id').eq('user_id',currentUser.id);(joined||[]).forEach(row=>joinedRooms.add(row.room_id));}
     const cards=[...document.querySelectorAll('.room-card')];
     for(let i=0;i<Math.min(cards.length,data.length);i++){
@@ -197,7 +210,7 @@
       if(!button) continue;
       card.querySelector('h3').textContent=item.name;
       card.querySelector('p').textContent=item.description;
-      const count=(counts||[]).find(row=>row.room_id===item.id)?.members||0;
+      const count=(counts||[]).find(row=>row.room_id===item.id)?.member_count||0;
       card.querySelector('small').textContent=(count||0)+' de '+item.capacity+' jugadores'+(item.is_demo?' · sala de muestra':'');
       const statusBadge=card.querySelector('.status');
       if(statusBadge){statusBadge.textContent=item.is_demo?'● MUESTRA':item.status==='open'?'● ABIERTA':item.status==='full'?'● COMPLETA':'● CERRADA';statusBadge.classList.toggle('live',item.status==='open');statusBadge.classList.toggle('waiting',item.status!=='open');}
@@ -211,6 +224,13 @@
         showToast(result.already_joined?'Ya estás en esta sala.':'Te uniste a la sala.');
         await loadRooms();
       };
+    }
+    // Las tarjetas sin registro en Supabase permanecen visibles, pero nunca simulan actividad ni habilitan acciones.
+    for(let i=(data||[]).length;i<cards.length;i++){
+      const card=cards[i],statusBadge=card.querySelector('.status'),button=card.querySelector('.join-btn');
+      if(statusBadge){statusBadge.textContent='● PRÓXIMAMENTE';statusBadge.classList.remove('live');statusBadge.classList.add('waiting');}
+      const small=card.querySelector('small');if(small)small.textContent='Se habilitará cuando exista una sala publicada.';
+      if(button){button.disabled=true;button.textContent='Próximamente';button.onclick=null;}
     }
   }
 
@@ -239,6 +259,19 @@
       card.querySelector('h3').textContent=season.name;
       const dates=[season.starts_at,season.ends_at].filter(Boolean).map(value=>new Date(value).toLocaleDateString('es-AR'));
       card.querySelector('ul').innerHTML='<li>'+ (dates.length===2?'Desde '+dates[0]+' hasta '+dates[1]:'Fechas por anunciar')+'</li><li>Estado: '+(season.status==='finished'?'Finalizada':season.status==='active'?'En curso':'Próximamente')+'</li><li>Recompensa: consultar catálogo de marcos</li>';
+      const action=card.querySelector('.season-action');
+      if(action){
+        action.disabled=false;
+        action.textContent=season.status==='finished'?'Completada':season.status==='active'?'En curso':'Próximamente';
+        action.onclick=()=>{
+          let dialog=document.getElementById('season-details');
+          if(!dialog){dialog=document.createElement('dialog');dialog.id='season-details';dialog.className='fairplay-dialog';document.body.appendChild(dialog);}
+          dialog.innerHTML='<button type="button" class="evidence-close" aria-label="Cerrar">×</button><span class="eyebrow">DETALLE DE TEMPORADA</span><h2>'+escapeHtml(season.name)+'</h2><p>Estado: '+escapeHtml(season.status==='finished'?'Finalizada':season.status==='active'?'En curso':'Próximamente')+'</p><p>'+(dates.length===2?'Desde '+dates[0]+' hasta '+dates[1]:'Fechas por anunciar')+'</p><p>Las recompensas disponibles se consultan en el catálogo real de PLAYFORJA.</p><a class="btn btn-gold" href="#misiones">Ver misiones</a>';
+          dialog.querySelector('.evidence-close').onclick=()=>dialog.close();
+          dialog.querySelector('a').addEventListener('click',()=>dialog.close());
+          dialog.showModal();
+        };
+      }
     }
   }
   async function loadEvidence(){
@@ -276,7 +309,7 @@
       const claimed=!!m.claimed_at,complete=m.progress>=m.target,started=!!m.started_at;
       const label=claimed?'Reclamada':complete?'Reclamar':started?'Seguir':'Empezar';
       const disabled=claimed;
-      return '<article class="mission-card mission-live"><div class="mission-card-top"><span class="mission-icon">'+(icons[m.slug]||'✦')+'</span><span class="mission-kicker">'+({daily:'CADA DÍA',weekly:'CADA SEMANA',seasonal:'TEMPORADA'}[m.category])+'</span><span class="mission-difficulty">'+m.difficulty+'</span></div><h3>'+escapeHtml(m.title)+'</h3><p>'+escapeHtml(m.description)+'</p><div class="mission-progress-label"><span>Progreso</span><b>'+m.progress+' / '+m.target+'</b></div><div class="mission-progress-track"><span style="width:'+pct+'%"></span></div><div class="mission-rewards"><b>+'+m.reward_xp+' XP</b><b>+'+m.reward_pf+' PF</b></div><button class="btn '+(complete?'btn-gold':'btn-outline')+' mission-action" data-id="'+m.user_mission_id+'" '+(disabled?'disabled':'')+'>'+label+'</button>'+(claimed?'<small class="mission-claimed">✓ Recompensa acreditada</small>':'')+'</article>';
+      return '<article class="mission-card mission-live"><div class="mission-card-top"><span class="mission-icon">'+(icons[m.slug]||'✦')+'</span><span class="mission-kicker">'+(m.category==='seasonal'?(m.period_key==='season-preview'?'PRETEMPORADA DE PRUEBA':'TEMPORADA ACTIVA'):({daily:'CADA DÍA',weekly:'CADA SEMANA'}[m.category]))+'</span><span class="mission-difficulty">'+m.difficulty+'</span></div><h3>'+escapeHtml(m.title)+'</h3><p>'+escapeHtml(m.description)+'</p><div class="mission-progress-label"><span>Progreso</span><b>'+m.progress+' / '+m.target+'</b></div><div class="mission-progress-track"><span style="width:'+pct+'%"></span></div><div class="mission-rewards"><b>+'+m.reward_xp+' XP</b><b>+'+m.reward_pf+' PF</b></div><button class="btn '+(complete?'btn-gold':'btn-outline')+' mission-action" data-id="'+m.user_mission_id+'" '+(disabled?'disabled':'')+'>'+label+'</button>'+(claimed?'<small class="mission-claimed">✓ Recompensa acreditada</small>':'')+'</article>';
     }).join('');
     host.querySelectorAll('.mission-action').forEach(btn=>btn.addEventListener('click',()=>handleMission(btn.dataset.id,btn)));
   }

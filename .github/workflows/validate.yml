@@ -1,0 +1,23 @@
+name: Validate PLAYFORJA Web
+on:
+  push:
+    branches: [main, feature/supabase-auth-foundation]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check web JavaScript syntax
+        run: |
+          node --check auth.js
+          node --check script.js
+      - name: Verify web-only delivery
+        run: |
+          node -e "const fs=require('fs'); const h=fs.readFileSync('index.html','utf8'); const s=fs.readFileSync('script.js','utf8'); const p=JSON.parse(fs.readFileSync('package.json','utf8')); if(!h.includes('LA APP') || !h.includes('LLEGA PRONTO')) throw Error('Missing app coming soon message'); if(h.includes('rel=\"manifest\"') || h.includes('install-app') || s.includes('serviceWorker.register') || p.dependencies?.['@capacitor/core']) throw Error('Unexpected installable app wiring'); if(fs.existsSync('capacitor.config.json') || fs.existsSync('manifest.webmanifest') || fs.existsSync('sw.js') || fs.existsSync('android')) throw Error('Android/PWA artifact remains in web branch');"

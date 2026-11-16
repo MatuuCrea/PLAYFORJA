@@ -3,13 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080808">
+  <meta name="theme-color" content="#0A0A0A">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <meta name="description" content="PLAYFORJA: torneos, salas, misiones y progresión competitiva. Forjá tu leyenda.">
   <title>PLAYFORJA — Forjá tu leyenda</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="auth.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -17,133 +20,146 @@
   <header class="site-header">
     <a class="brand" href="#inicio" aria-label="PLAYFORJA, inicio">
       <svg class="brand-mark" viewBox="0 0 100 100" role="img" aria-label="Yunque, corona y fuego">
-        <path d="M50 5 C37 21 45 26 34 37 C27 45 30 53 38 57 C35 45 48 42 48 32 C61 43 67 51 59 62 C78 54 79 34 64 20 C65 34 57 36 57 42 C58 26 52 17 50 5Z" fill="#ef6a22"/>
-        <path d="M25 25 L34 12 L50 20 L66 12 L75 25 L69 34 L31 34Z" fill="#f2c45d" stroke="#8f6422" stroke-width="2"/>
-        <circle cx="34" cy="22" r="3" fill="#fff0b5"/><circle cx="50" cy="24" r="3" fill="#fff0b5"/><circle cx="66" cy="22" r="3" fill="#fff0b5"/>
+        <path d="M24 63 C10 47 26 34 34 24 C33 39 42 43 43 54 C49 43 49 30 50 17 C64 34 69 47 59 63Z" fill="#FF6B00"/><path d="M43 66 C35 53 47 46 50 36 C61 50 65 58 57 68Z" fill="#FFD45A"/><path d="M61 64 C56 53 68 44 72 35 C79 51 76 60 68 68Z" fill="#FF6B00"/>
+        <path d="M22 28 L30 12 L40 23 L50 8 L60 23 L70 12 L78 28 L70 37 H30Z" fill="#D4AF37" stroke="#8f6422" stroke-width="2"/>
         <path d="M23 48 H77 L70 61 H58 L58 69 H76 L81 79 H19 L24 69 H42 V61 H30Z" fill="#d9a83f" stroke="#80571d" stroke-width="2" stroke-linejoin="round"/>
         <path d="M36 82 H64 L70 89 H30Z" fill="#9c6c28"/>
       </svg>
       <span class="brand-word">PLAY<span>FORJA</span><small>FORJÁ TU LEYENDA</small></span>
     </a>
-    <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" type="button">☰</button>
     <nav class="main-nav" aria-label="Navegación principal">
       <a href="#inicio">Inicio</a><a href="#torneos">Torneos</a><a href="#salas">Salas</a>
       <a href="#misiones">Misiones</a><a href="#marcos">Marcos</a><a href="#temporadas">Temporadas</a>
       <a href="#streaming">Streaming</a><a href="#idiomas">Idiomas</a><a href="#evidencia">Evidencia</a>
-      <a class="nav-download" href="#descargar">Descargar App</a>
+      <a class="nav-download" href="#descargar">La App llega pronto</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero section-wrap" id="inicio">
-      <div class="hero-copy">
+    <section class="arena-layout section-wrap" id="inicio">
+      <section class="hero-panel">
         <div class="eyebrow"><span></span> ARENA COMPETITIVA GLOBAL</div>
-        <h1>FORJÁ<br><em>TU LEYENDA.</em></h1>
-        <p class="hero-lead">Tu habilidad. Tu equipo. Tu historia. Entrá a la arena y conquistá tu lugar en PLAYFORJA.</p>
-        <p class="hero-note">Sin plata real. Solo <b>Monedas PF</b> y <b>XP</b>.</p>
-        <div class="hero-actions"><a class="btn btn-gold" href="#descargar">Descargar App <span>↗</span></a><a class="btn btn-outline" href="#torneos">Ver Torneos</a></div>
-        <div class="hero-stats"><div><strong>GLOBAL</strong><small>Comunidad</small></div><div><strong>FAIR PLAY</strong><small>Competencia justa</small></div><div><strong>XP + PF</strong><small>Progresión</small></div></div>
-      </div>
-      <div class="hero-art">
-        <div class="hero-ring ring-one"></div><div class="hero-ring ring-two"></div>
-        <div class="hero-emblem">
-          <svg viewBox="0 0 300 330" role="img" aria-label="Emblema PLAYFORJA con corona, fuego y yunque">
+        <h1>PLAY<span>FORJA</span></h1>
+        <h2 class="hero-slogan">Forjá tu leyenda</h2>
+        <p class="hero-lead">Tu habilidad. Tu equipo. Tu historia. Entrá a la arena y conquistá tu lugar.</p>
+        <button class="btn btn-gold hero-app-button" type="button" data-open-app>Descargar App</button>
+        <button class="fair-play" type="button" data-open-fairplay><span class="fair-shield">⬟</span><span><b>SIN PLATA REAL</b><small>Solo Monedas PF y XP</small></span><span class="info-mark">i</span></button>
+        <div class="hero-stats"><div><strong>PF + XP</strong><small>Economía interna</small></div><div><strong>FAIR PLAY</strong><small>Competencia justa</small></div></div>
+      </section>
+
+      <section class="tournaments-panel" id="torneos">
+        <div class="section-heading compact"><div><div class="eyebrow">LA ARENA TE ESPERA</div><h2>TORNEOS <em>ACTIVOS</em></h2><p>Competí, ganá y subí de rango sin dinero real</p></div></div>
+        <div class="tournament-filters" role="group" aria-label="Filtrar torneos">
+          <button type="button" class="platform-filter" data-platform-filter="PC">PC</button>
+          <button type="button" class="platform-filter active" data-platform-filter="Móvil">Móvil</button>
+          <button type="button" class="platform-filter" data-platform-filter="Tablet">Tablet</button>
+        </div>
+        <div class="card-grid tournament-cards">
+          <article class="game-card game-ml" data-platform="Móvil"><div class="game-visual"><span class="game-symbol">✦</span><span class="game-label">MOBILE ARENA</span></div><div class="card-content"><span class="pill">MÓVIL · 5V5</span><h3>Mobile Legends 5v5</h3><p>Modo Clasificatoria · Horario por confirmar</p><div class="card-meta"><span>Inscripciones</span><b>Cargando datos…</b></div><button class="btn btn-gold full join-btn" data-item="Torneo Mobile Legends" disabled>Cargando…</button></div></article>
+          <article class="game-card game-val" data-platform="PC" hidden><div class="game-visual"><span class="game-symbol">V</span><span class="game-label">TACTICAL STRIKE</span></div><div class="card-content"><span class="pill">PC · 5V5</span><h3>Valorant PC 5v5</h3><p>Modo Custom · Horario por confirmar</p><div class="card-meta"><span>Inscripciones</span><b>Cargando datos…</b></div><button class="btn btn-gold full join-btn" data-item="Torneo Valorant" disabled>Cargando…</button></div></article>
+          <article class="game-card game-ff" data-platform="Móvil"><div class="game-visual"><span class="game-symbol">火</span><span class="game-label">BATTLE ROYALE</span></div><div class="card-content"><span class="pill">MÓVIL · SQUAD</span><h3>Free Fire Squad</h3><p>Modo Squad · Horario por confirmar</p><div class="card-meta"><span>Inscripciones</span><b>Cargando datos…</b></div><button class="btn btn-gold full join-btn" data-item="Torneo Free Fire" disabled>Cargando…</button></div></article>
+        </div>
+        <p class="data-legend">Los cupos y horarios se muestran desde los registros disponibles. No se inventan inscripciones ni actividad.</p>
+        <div id="community-tournaments" class="card-grid three community-tournaments"></div>
+        <div class="create-panel"><div><span class="eyebrow">TU PARTIDA, TUS REGLAS</span><h3>CREÁ TU PROPIO TORNEO</h3><p>Elegí el juego y la plataforma para armar tu desafío.</p></div><div class="create-controls"><label for="game-choice">Elegir juego</label><select id="game-choice"><option>Mobile Legends</option><option>Valorant</option><option>Free Fire</option><option>Otro juego</option></select><div class="platform-picker" role="group" aria-label="Elegir plataforma"><button class="platform active" data-platform="PC" type="button">PC</button><button class="platform" data-platform="Móvil" type="button">Móvil</button><button class="platform" data-platform="Tablet" type="button">Tablet</button></div><button class="btn btn-gold" id="create-tournament" type="button">＋ Crear Torneo</button></div></div>
+      </section>
+
+      <aside class="emblem-panel">
+        <div class="hero-art"><div class="hero-ring ring-one"></div><div class="hero-ring ring-two"></div><div class="hero-emblem">
+          <svg viewBox="0 0 300 330" role="img" aria-label="Escudo oficial PLAYFORJA con corona, fuego y yunque">
             <defs><linearGradient id="gold" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff0a8"/><stop offset=".45" stop-color="#e5b64c"/><stop offset="1" stop-color="#8d5b19"/></linearGradient><linearGradient id="flame" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#ffd56b"/><stop offset="1" stop-color="#e34a13"/></linearGradient></defs>
-            <path d="M150 12 C103 73 142 81 102 123 C68 159 88 205 119 218 C103 175 150 162 143 122 C190 165 205 199 174 229 C237 202 236 140 187 87 C195 129 166 139 166 154 C169 101 155 53 150 12Z" fill="url(#flame)" opacity=".96"/>
+            <path d="M150 12 C103 73 142 81 102 123 C68 159 88 205 119 218 C103 175 150 162 143 122 C190 165 205 199 174 229 C237 202 236 140 187 87 C195 129 166 139 166 154 C169 101 155 53 150 12Z" fill="url(#flame)"/>
             <path d="M73 84 L99 49 L150 69 L201 49 L227 84 L211 119 L89 119Z" fill="url(#gold)" stroke="#6f4a16" stroke-width="5"/>
             <path d="M70 173 H230 L210 210 H174 V236 H224 L242 270 H58 L76 236 H126 V210 H90Z" fill="url(#gold)" stroke="#6f4a16" stroke-width="5" stroke-linejoin="round"/>
             <path d="M112 279 H188 L207 302 H93Z" fill="#9a6821"/>
-            <path d="M91 93 L105 72 L132 82 M209 93 L195 72 L168 82" fill="none" stroke="#fff0b5" stroke-width="5" stroke-linecap="round"/>
-          </svg>
-          <div class="emblem-caption">PLAYFORJA <span>✦</span> ARENA</div>
+          </svg><div class="emblem-caption">PLAYFORJA <span>✦</span></div>
+        </div></div>
+        <div class="mini-frame-grid">
+          <article class="mini-frame"><span class="mini-frame-icon">♛</span><div><b>Marco Leyenda</b><small>1200 PF</small></div><button class="btn btn-outline buy-btn" data-frame="Marco Leyenda" disabled>CANJEAR</button></article>
+          <article class="mini-frame"><span class="mini-frame-icon fire">♨</span><div><b>Marco Fuego</b><small>800 PF</small></div><button class="btn btn-outline buy-btn" data-frame="Marco Fuego" disabled>CANJEAR</button></article>
         </div>
-        <div class="floating-tag tag-top">⚔ COMPETÍ</div><div class="floating-tag tag-bottom">🔥 SUPERATE</div>
+        <div class="balance">SALDO DISPONIBLE <strong>— PF</strong></div>
+      </aside>
+    </section>
+
+    <section class="lower-grid section-wrap">
+      <section class="lower-panel" id="salas">
+        <div class="panel-title"><span class="eyebrow">ENCONTRÁ TU EQUIPO</span><h2>SALAS DE <em>JUEGO</em></h2></div>
+        <label class="search-box"><span>⌕</span><input id="room-search" type="search" placeholder="Buscar sala…" aria-label="Buscar salas"></label>
+        <div class="room-grid" id="room-list">
+          <article class="room-card" data-search="duelo infernal volcan ardiente"><div class="room-icon">♨</div><div class="room-info"><span class="status waiting">● CARGANDO</span><h3>Duelo Infernal</h3><p>1v1 · Mapa Aleatorio</p><small>Premio +200 XP · Rango Plata+</small></div><button class="btn btn-outline join-btn" data-item="Sala Duelo Infernal" disabled>Unirse</button></article>
+          <article class="room-card" data-search="torneo nocturno fortaleza"><div class="room-icon">☾</div><div class="room-info"><span class="status waiting">● CARGANDO</span><h3>Torneo Nocturno</h3><p>4v4 · Modo Nocturno</p><small>Premio Marco Fuego · Rango Oro+</small></div><button class="btn btn-outline join-btn" data-item="Sala Torneo Nocturno" disabled>Unirse</button></article>
+          <article class="room-card" data-search="campeonato en vivo campeonato vivo arena"><div class="room-icon">♛</div><div class="room-info"><span class="status waiting">● CARGANDO</span><h3>Campeonato en Vivo</h3><p>5v5 · Arena principal</p><small>Premios y cupos según datos publicados</small></div><button class="btn btn-outline join-btn" data-item="Sala Campeonato en Vivo" disabled>Unirse</button></article>
+        </div><p class="empty-state" id="empty-rooms" hidden>No encontramos salas con esa búsqueda.</p>
+      </section>
+
+      <section class="lower-panel" id="marcos">
+        <div class="panel-title"><span class="eyebrow">PERSONALIZÁ TU PERFIL</span><h2>TIENDA DE <em>MARCOS</em></h2></div>
+        <div class="store-grid">
+          <article class="frame-card"><div class="frame-preview frame-legend"><span>♛</span></div><h3>Marco Leyenda</h3><b>1200 PF</b><button class="btn btn-outline buy-btn" data-frame="Marco Leyenda" disabled>CANJEAR</button></article>
+          <article class="frame-card"><div class="frame-preview frame-fire"><span>♨</span></div><h3>Marco Fuego</h3><b>800 PF</b><button class="btn btn-outline buy-btn" data-frame="Marco Fuego" disabled>CANJEAR</button></article>
+          <article class="frame-card"><div class="frame-preview frame-gold"><span>✦</span></div><h3>Marco Oro</h3><b>Catálogo PF</b><button class="btn btn-outline buy-btn" data-frame="Marco Oro" disabled>CANJEAR</button></article>
+          <article class="frame-card"><div class="frame-preview frame-diamond"><span>◇</span></div><h3>Marco Diamante</h3><b>Catálogo PF</b><button class="btn btn-outline buy-btn" data-frame="Marco Diamante" disabled>CANJEAR</button></article>
+        </div><div class="credits-line"><span>MONEDAS PF <strong>Iniciá sesión</strong></span><span>XP <strong>Iniciá sesión</strong></span></div>
+      </section>
+
+      <section class="lower-panel progression-panel" id="misiones">
+        <div class="panel-title"><span class="eyebrow">GANATE CADA ASCENSO</span><h2>PROGRESIÓN</h2></div>
+        <div class="rank-panel"><div class="rank-top"><div><span class="eyebrow">RANGO ACTUAL</span><h3>INICIÁ SESIÓN PARA VER TU RANGO</h3></div><strong>—</strong></div>
+          <div class="rank-badges"><span>♜<small>BRONCE</small></span><span>♜<small>PLATA</small></span><span class="current">♛<small>ORO</small></span><span>♜<small>PLATINO</small></span><span>♜<small>DIAMANTE</small></span><span>♜<small>LEYENDA</small></span></div>
+          <div class="progress-caption"><b>Tu progreso a Leyenda</b><strong class="progress-number">— XP · —%</strong></div><div class="progress-track"><span style="width:0%"></span></div>
+          <div class="rank-labels"><span>BRONCE</span><span>PLATA</span><span>ORO</span><span>PLATINO</span><span>DIAMANTE</span><span>LEYENDA</span></div>
+        </div>
+        <div class="mission-tabs" role="tablist" aria-label="Tipos de misiones"><button class="mission-tab active" type="button" data-mission-tab="daily">Diarias</button><button class="mission-tab" type="button" data-mission-tab="weekly">Semanales</button><button class="mission-tab" type="button" data-mission-tab="seasonal">De temporada</button></div>
+        <div id="mission-list" class="mission-grid" aria-live="polite"><p class="mission-empty">Iniciá sesión para cargar tus misiones.</p></div>
+      </section>
+
+      <section class="lower-panel" id="temporadas">
+        <div class="panel-title"><span class="eyebrow">EL JUEGO EVOLUCIONA</span><h2>TEMPORADAS</h2></div>
+        <div class="season-grid">
+          <article class="season-card season-old"><span class="season-number">▣ TEMPORADA 01</span><span class="pill muted">CARGANDO</span><h3>FORJA INICIAL</h3><ul><li>Marzo 2025 · Finalizada</li><li>Recompensa Marco Leyenda</li></ul><button class="btn btn-outline season-action" type="button" disabled>Completada</button></article>
+          <article class="season-card season-new"><span class="season-number">◇ TEMPORADA 02</span><span class="pill">CARGANDO</span><h3>LLAMA ETERNA</h3><ul><li>Abril 2025 · Estado por verificar</li><li>Recompensa Marco Fuego</li></ul><button class="btn btn-gold season-action" type="button" disabled>En curso</button></article>
+        </div>
+        <div class="season-message"><h3>NUEVOS RETOS. NUEVAS LEYENDAS.</h3><p>Las temporadas se muestran según los datos publicados en PLAYFORJA.</p></div>
+      </section>
+    </section>
+
+    <section class="language-strip section-wrap" id="idiomas">
+      <div class="lower-panel language-panel">
+        <div class="panel-title"><span class="eyebrow">UNA ARENA, MUCHAS CULTURAS</span><h2>IDIOMAS</h2></div>
+        <div class="country-grid"><button class="country active" data-lang="es" type="button">🇦🇷 Español</button><button class="country" data-lang="pt" type="button">🇧🇷 Português</button><button class="country" data-lang="en" type="button">🇺🇸 English</button><button class="country" data-lang="fr" type="button">🇫🇷 Français</button><button class="country" data-lang="de" type="button">🇩🇪 Deutsch</button><button class="country" data-lang="ja" type="button">🇯🇵 日本語</button></div>
+        <p class="language-list">Preferencia de idioma seleccionada: <strong id="hello-text">Español</strong>. La traducción integral de la interfaz se habilitará cuando estén disponibles los paquetes de idioma.</p>
       </div>
     </section>
 
-    <section class="ticker" aria-label="Lema"><span>HABILIDAD</span> ✦ <span>ESTRATEGIA</span> ✦ <span>RESPETO</span> ✦ <span>LEYENDA</span> ✦ <span>HABILIDAD</span> ✦ <span>ESTRATEGIA</span></section>
-
-    <section class="section-wrap section" id="torneos">
-      <div class="section-heading"><div><div class="eyebrow">LA ARENA TE ESPERA</div><h2>TORNEOS <em>DESTACADOS</em></h2></div><span class="section-index">01 / COMPETÍ</span></div>
-      <div class="card-grid three">
-        <article class="game-card game-ml"><div class="game-visual"><span class="game-symbol">✦</span><span class="game-label">MOBILE ARENA</span></div><div class="card-content"><span class="pill">CLASIFICATORIO · 5V5</span><h3>Mobile Legends</h3><p>Demostrá tu estrategia en equipo y avanzá en la clasificación.</p><div class="card-meta"><span>Premios</span><b>Créditos PF</b></div><button class="btn btn-gold full join-btn" data-item="Torneo Mobile Legends">Unirse <span>→</span></button></div></article>
-        <article class="game-card game-val"><div class="game-visual"><span class="game-symbol">V</span><span class="game-label">TACTICAL STRIKE</span></div><div class="card-content"><span class="pill">SPIKE · ELIMINACIÓN DIRECTA</span><h3>VALORANT</h3><p>PC · Equipos 5 contra 5. Cada ronda cuenta.</p><div class="card-meta"><span>Cupos</span><b>32 de 32</b></div><button class="btn btn-gold full join-btn" data-item="Torneo Valorant" disabled>Cupos completos</button></div></article>
-        <article class="game-card game-ff"><div class="game-visual"><span class="game-symbol">火</span><span class="game-label">BATTLE ROYALE</span></div><div class="card-content"><span class="pill">SQUAD · SUPERVIVENCIA</span><h3>FREE FIRE</h3><p>Tu escuadra contra todos. Solo uno llega a la cima.</p><div class="card-meta"><span>Recompensa</span><b>Skin exclusiva</b></div><button class="btn btn-gold full join-btn" data-item="Torneo Free Fire">Unirse <span>→</span></button></div></article>
-      </div>
-      <div class="create-panel"><div><span class="eyebrow">TU PARTIDA, TUS REGLAS</span><h3>CREÁ TU PROPIO TORNEO</h3><p>Elegí el juego y la plataforma para armar tu desafío.</p></div><div class="create-controls"><label for="game-choice">Elegir juego</label><select id="game-choice"><option>Mobile Legends</option><option>Valorant</option><option>Free Fire</option><option>Otro juego</option></select><div class="platform-picker" role="group" aria-label="Elegir plataforma"><button class="platform active" data-platform="PC">PC</button><button class="platform" data-platform="Móvil">Móvil</button><button class="platform" data-platform="Tablet">Tablet</button></div><button class="btn btn-gold" id="create-tournament">＋ Crear Torneo</button></div></div>
+    <section class="world-evidence section-wrap">
+      <section class="lower-panel world-panel" id="mapa">
+        <div class="panel-title"><span class="eyebrow">CONECTÁ CON LATAM</span><h2>MAPA <em>MUNDIAL</em></h2></div>
+        <div class="map-heading">◉ MAPA INTERACTIVO <small>REFERENCIAS GEOGRÁFICAS · SIN PING INVENTADO</small></div>
+        <div class="globe-layout"><div class="globe-stage"><canvas id="playforja-globe" width="720" height="520" role="img" aria-label="Globo interactivo: arrastrá para girar, rueda para zoom y tocá para elegir coordenadas."></canvas><div class="globe-hint">Arrastrá para girar · rueda o pellizco para zoom · tocá para elegir</div></div>
+          <aside class="globe-tools"><label for="globe-search">Buscar ciudad</label><div class="globe-search-row"><input id="globe-search" type="search" placeholder="Buenos Aires, Tokio…"><button id="globe-search-go" class="btn btn-outline" type="button">Ir</button></div>
+            <div class="globe-presets"><button type="button" data-city="Buenos Aires">Buenos Aires</button><button type="button" data-city="São Paulo">São Paulo</button><button type="button" data-city="Santiago">Chile</button><button type="button" data-city="Ciudad de México">CDMX</button></div>
+            <div class="globe-selection" aria-live="polite"><span>UBICACIÓN ELEGIDA</span><strong id="globe-place">Todavía no elegiste una ubicación</strong><small id="globe-coordinates">Latitud — · Longitud —</small></div>
+            <p>Los puntos identifican ciudades de referencia. Torneos, salas activas y ping solo se mostrarán al conectar datos regionales verificados.</p>
+          </aside>
+        </div>
+        <div class="map-region-list"><button type="button" data-city="Buenos Aires"><b>Buenos Aires</b><span>Actividad regional por verificar</span></button><button type="button" data-city="São Paulo"><b>São Paulo</b><span>Torneos por verificar</span></button><button type="button" data-city="Santiago"><b>Chile</b><span>Conectando jugadores de LATAM</span></button><button type="button" data-city="Ciudad de México"><b>CDMX</b><span>Ping no disponible</span></button></div>
+      </section>
+      <section class="lower-panel evidence-section" id="evidencia">
+        <div class="panel-title"><span class="eyebrow">TRANSPARENCIA Y LOGROS</span><h2>EVIDENCIA</h2></div>
+        <p class="evidence-intro">Galería de logros y capturas validadas por la comunidad.</p>
+        <div class="evidence-grid" id="evidence-gallery"><p class="evidence-empty">Cargando evidencias validadas…</p></div>
+      </section>
     </section>
 
-    <section class="section section-dark" id="salas"><div class="section-wrap">
-      <div class="section-heading"><div><div class="eyebrow">ENCONTRÁ TU EQUIPO</div><h2>SALAS DE <em>JUEGO</em></h2></div><span class="section-index">02 / CONECTATE</span></div>
-      <div class="search-row"><p>Entrá a una sala y sumate a la acción.</p><label class="search-box"><span>⌕</span><input id="room-search" type="search" placeholder="Buscar sala, mapa o estado…" aria-label="Buscar salas"></label></div>
-      <div class="room-grid" id="room-list">
-        <article class="room-card" data-search="duelo infernal volcan ardiente en curso"><div class="room-icon">⚔</div><div class="room-info"><span class="status live">● EN CURSO</span><h3>Duelo Infernal 1v1</h3><p>Mapa Volcán Ardiente</p><small>4 de 8 jugadores</small></div><button class="btn btn-outline join-btn" data-item="Sala Duelo Infernal">Unirse</button></article>
-        <article class="room-card" data-search="torneo nocturno fortaleza nocturna esperando"><div class="room-icon">◈</div><div class="room-info"><span class="status waiting">● ESPERANDO</span><h3>Torneo Nocturno</h3><p>Mapa Fortaleza Nocturna</p><small>2 de 6 jugadores</small></div><button class="btn btn-outline join-btn" data-item="Sala Torneo Nocturno">Unirse</button></article>
-        <article class="room-card" data-search="en vivo campeonato directo finales liga fuego"><div class="room-icon">▶</div><div class="room-info"><span class="status live">● EN VIVO</span><h3>Campeonato en Directo</h3><p>Finales · Liga de Fuego</p><small>128 espectadores viendo</small></div><a class="btn btn-outline" href="#streaming">Ver directo</a></article>
-      </div><p class="empty-state" id="empty-rooms" hidden>No encontramos salas con esa búsqueda.</p>
-    </div></section>
-
-    <section class="section section-wrap" id="marcos">
-      <div class="section-heading"><div><div class="eyebrow">PERSONALIZÁ TU PERFIL</div><h2>TIENDA DE <em>MARCOS</em></h2></div><div class="balance">SALDO DISPONIBLE <strong>12.450 XP</strong></div></div>
-      <div class="frame-grid">
-        <article class="frame-card"><div class="frame-preview frame-legend"><span>PF</span></div><h3>Marco Leyenda</h3><b>2.500 XP</b><button class="btn btn-outline buy-btn" data-frame="Marco Leyenda">Comprar</button></article>
-        <article class="frame-card"><div class="frame-preview frame-fire"><span>PF</span></div><h3>Marco Fuego</h3><b>1.800 XP</b><button class="btn btn-outline buy-btn" data-frame="Marco Fuego">Comprar</button></article>
-        <article class="frame-card"><div class="frame-preview frame-gold"><span>PF</span></div><h3>Marco Oro</h3><b>1.200 XP</b><button class="btn btn-outline buy-btn" data-frame="Marco Oro">Comprar</button></article>
-        <article class="frame-card"><div class="frame-preview frame-diamond"><span>PF</span></div><h3>Marco Diamante</h3><b>3.000 XP</b><button class="btn btn-outline buy-btn" data-frame="Marco Diamante">Comprar</button></article>
-      </div>
-      <div class="credits-line"><span>CRÉDITOS PF <strong>12.450</strong></span><span>XP DISPONIBLE <strong>12.450</strong></span></div>
-    </section>
-
-    <section class="section section-dark" id="misiones"><div class="section-wrap">
-      <div class="section-heading"><div><div class="eyebrow">GANATE CADA ASCENSO</div><h2>PROGRESIÓN <em>QUE NO SE REGALA</em></h2></div><span class="section-index">03 / SUPERATE</span></div>
-      <div class="rank-panel"><div class="rank-top"><div><span class="eyebrow">TU CAMINO</span><h3>ORO <span>→</span> PLATINO</h3></div><strong>68<small>%</small></strong></div><div class="progress-track"><span style="width:68%"></span></div><div class="rank-labels"><span>BRONCE</span><span>PLATA</span><span class="current">ORO</span><span>PLATINO</span><span>DIAMANTE</span><span>LEYENDA</span></div></div>
-      <div class="mission-grid">
-        <article class="mission-card"><span class="mission-kicker">CADA DÍA</span><h3>MISIONES DIARIAS</h3><ul><li><span>Completá 2 partidas</span><b>+150 EXP</b></li><li><span>Jugá con tu equipo</span><b>+200 EXP</b></li><li><span>Conseguí 1 victoria</span><b>+250 EXP</b></li></ul></article>
-        <article class="mission-card"><span class="mission-kicker">CADA SEMANA</span><h3>MISIONES SEMANALES</h3><ul><li><span>Ganá 5 partidas</span><b>+700 EXP</b></li><li><span>Jugá 10 encuentros</span><b>+500 EXP</b></li><li><span>Alcanzá el Top 3</span><b>+900 EXP</b></li></ul></article>
-        <article class="mission-card"><span class="mission-kicker">CICLO ACTUAL</span><h3>MISIONES DE TEMPORADA</h3><ul><li><span>Completá 30 partidas</span><b>+1.500 EXP</b></li><li><span>Subí una división</span><b>+2.000 EXP</b></li><li><span>Superá 3 desafíos</span><b>+1.200 EXP</b></li></ul></article>
-      </div>
-      <p class="manifesto">DIFÍCIL PERO JUSTO. <em>NO ES FÁCIL. NO ES IMPOSIBLE.</em></p>
-    </div></section>
-
-    <section class="section section-wrap" id="temporadas">
-      <div class="section-heading"><div><div class="eyebrow">EL JUEGO EVOLUCIONA</div><h2>NUEVAS TEMPORADAS, <em>NUEVOS RETOS</em></h2></div><span class="section-index">04 / EVOLUCIONÁ</span></div>
-      <div class="season-grid">
-        <article class="season-card season-old"><span class="season-number">TEMPORADA 01</span><span class="pill muted">FINALIZADA</span><h3>FORJA INICIAL</h3><ul><li>Primer ciclo completado</li><li>Fundamos la base competitiva</li><li>Recompensas iniciales desbloqueadas</li></ul></article>
-        <article class="season-card season-new"><span class="season-number">TEMPORADA 02</span><span class="pill">NUEVA</span><h3>FORJA MEJORADA</h3><ul><li>Nuevos mapas y misiones</li><li>Balanceo y recompensas mejoradas</li><li>Dificultad y dinámicas renovadas</li></ul></article>
-      </div>
-      <div class="season-message"><h3>TORNEOS QUE ROTAN Y MEJORAN.</h3><p>Cuando termina un torneo, empieza otro mejorado. Nunca repetitivo.</p><div><span>✦ Nuevos mapas</span><span>✦ Nuevas misiones</span><span>✦ Nuevos desafíos</span></div></div>
-    </section>
-
-    <section class="section anti-section"><div class="section-wrap anti-layout"><div><div class="eyebrow">EL TALENTO SE CONSTRUYE</div><h2>SISTEMA <em>ANTI-PRO</em></h2><p>El progreso se gana jugando. Los pros no lo ganan en un día. Sistema de ligas por nivel para que cada desafío sea justo.</p><div class="anti-steps"><div><b>01</b><span>Jugá 5 partidas</span></div><div><b>02</b><span>Ganá 3 partidas</span></div><div><b>03</b><span>Llegá a Top 3</span></div></div></div><div class="reward-seal"><span>RECOMPENSA</span><strong>FINAL</strong><small>FORJADA, NO REGALADA</small>✦</div></div></section>
-
-    <section class="section section-dark" id="idiomas"><div class="section-wrap">
-      <div class="section-heading"><div><div class="eyebrow">UNA ARENA, MUCHAS CULTURAS</div><h2>PLAYFORJA <em>GLOBAL</em></h2></div><span class="section-index">05 / CONECTÁ</span></div>
-      <div class="language-layout"><div><h3>ELEGÍ TU IDIOMA</h3><div class="country-grid"><button class="country active" data-lang="es">🇦🇷 Argentina</button><button class="country" data-lang="es">🇪🇸 España</button><button class="country" data-lang="pt">🇧🇷 Brasil</button><button class="country" data-lang="en">🇺🇸 USA</button><button class="country" data-lang="fr">🇫🇷 Francia</button><button class="country" data-lang="de">🇩🇪 Alemania</button><button class="country" data-lang="ja">🇯🇵 Japón</button><button class="country" data-lang="ja">🇰🇷 Corea</button></div><p class="language-list">Español Argentino · Português · English · Français · Deutsch · Japonés</p><p class="muted-copy">La app se adapta a tu país.</p></div><div class="hello-card"><span class="eyebrow">BIENVENIDO A LA FORJA</span><strong id="hello-text">Hola Matuu</strong><small>Olá Matuu · Hello Matuu</small></div></div>
-      <div class="world-map"><div class="map-heading"><span>◉</span> MAPA MUNDIAL PLAYFORJA</div><div class="map-regions"><article><b>LATAM</b><span>Argentina · Brasil · México</span><i>● ● ●</i></article><article><b>NA &amp; EU</b><span>USA · España · Francia</span><i>● ● ●</i></article><article><b>APAC</b><span>Japón</span><i>●</i></article></div><p>Jugadores de distintos países conectados · Colaboración global en tiempo real</p></div>
-    </div></section>
-
-    <section class="section section-wrap" id="streaming"><div class="section-heading"><div><div class="eyebrow">LA COMPETENCIA EN DIRECTO</div><h2>STREAMING <em>EN VIVO</em></h2></div><span class="section-index">06 / MIRÁ</span></div><div class="stream-card"><div class="stream-screen"><span class="stream-live">● EN VIVO</span><div class="play-mark">▶</div><span>PLAYFORJA ARENA</span></div><div class="stream-info"><span class="eyebrow">LIGA DE FUEGO · FINALES</span><h3>CAMPEONATO EN DIRECTO</h3><p>La emoción de la arena, en tiempo real.</p><strong>◉ 128 espectadores viendo</strong><small>El reproductor oficial se habilitará cuando se conecte el canal de streaming.</small></div></div></section>
-
-    <section class="section evidence-section" id="evidencia"><div class="section-wrap">
-      <div class="section-heading"><div><div class="eyebrow">TRANSPARENCIA DEL PROYECTO</div><h2>EVIDENCIA <em>OFICIAL</em></h2></div><span class="section-index">07 / REGISTRO</span></div>
-      <p class="evidence-intro">Galería preparada para documentar la evolución real de PLAYFORJA. Las imágenes originales se incorporarán aquí sin reemplazarlas por capturas inventadas.</p>
-      <div class="evidence-grid">
-        <article><div class="evidence-placeholder">TORNEO ADAPTATIVO</div><h3>Torneo Adaptativo</h3><p>Registro visual del sistema de torneos y sus modalidades.</p></article>
-        <article><div class="evidence-placeholder">PROGRESIÓN</div><h3>Progresión</h3><p>Ligas, XP y avance competitivo.</p></article>
-        <article><div class="evidence-placeholder">TEMPORADAS</div><h3>Temporadas</h3><p>Ciclos, mapas y recompensas.</p></article>
-        <article><div class="evidence-placeholder">ANTI PRO</div><h3>Anti Pro</h3><p>Etapas de desafío y balance por nivel.</p></article>
-        <article><div class="evidence-placeholder">IDIOMAS</div><h3>Idiomas</h3><p>Experiencia internacional y localización.</p></article>
-        <article><div class="evidence-placeholder">MAPA MUNDIAL</div><h3>Mapa Mundial</h3><p>Regiones y servidores previstos.</p></article>
-        <article><div class="evidence-placeholder">HOLA MATUU · OLÁ · HELLO</div><h3>Inicio en tres idiomas</h3><p>Hola Matuu · Olá Matuu · Hello Matuu.</p></article>
-        <article><div class="evidence-placeholder">LOGO OFICIAL</div><h3>Logo oficial</h3><p>Identidad visual: corona, fuego y yunque.</p></article>
-        <article><div class="evidence-placeholder">SALAS Y MARCOS</div><h3>Salas y Marcos</h3><p>Espacios de juego y personalización del perfil.</p></article>
-      </div>
-    </div></section>
-
-    <section class="download-cta section-wrap" id="descargar"><div><span class="eyebrow">TU LEYENDA EMPIEZA ACÁ</span><h2>ENTRÁ A LA <em>FORJA.</em></h2><p>Prepará tu equipo. La arena te espera.</p></div><a class="btn btn-gold" href="https://github.com/MatuuCrea/PLAYFORJA" target="_blank" rel="noopener">Ver proyecto en GitHub ↗</a></section>
+    <section class="section section-wrap" id="streaming"><div class="section-heading"><div><div class="eyebrow">CANAL OFICIAL EN PREPARACIÓN</div><h2>STREAMING <em>PRÓXIMAMENTE</em></h2></div></div><div class="stream-card"><div class="stream-screen"><span class="stream-live">● PRÓXIMAMENTE</span><div class="play-mark">PF</div><span>PLAYFORJA ARENA</span></div><div class="stream-info"><h3>STREAMING PRÓXIMAMENTE</h3><p>Las transmisiones se habilitarán cuando conectemos un proveedor autorizado. No mostramos espectadores ficticios.</p></div></div></section>
+    <section class="download-cta section-wrap" id="descargar"><div><span class="eyebrow">APLICACIÓN EN PREPARACIÓN</span><h2>LA APP <em>LLEGA PRONTO.</em></h2><p>PLAYFORJA funciona como página web. Cuando exista una aplicación oficial, publicaremos aquí las descargas verificadas para PC, móvil y tablet.</p></div><span class="btn btn-outline">Disponible próximamente</span></section>
   </main>
 
-  <footer class="site-footer"><div class="footer-brand"><strong>PLAYFORJA</strong><span>FORJÁ TU LEYENDA</span></div><div class="footer-meta"><span>Soporte 24 y 7</span><span>Argentina · GMT −3</span><a href="https://github.com/MatuuCrea" target="_blank" rel="noopener">Volver al Perfil ↗</a></div><small>© <span id="year"></span> PLAYFORJA. Todos los derechos reservados. Sin apuestas ni dinero real.</small></footer>
+  <footer class="site-footer"><div class="footer-brand"><strong>PLAYFORJA</strong><span>FORJÁ TU LEYENDA</span></div><div class="footer-meta"><a href="./terminos.html">Políticas</a><a href="./soporte.html">Soporte</a><a href="./soporte.html">Contacto</a><a href="https://github.com/MatuuCrea/PLAYFORJA" target="_blank" rel="noopener">Código abierto en GitHub ↗</a></div><small>© <span id="year">2025</span> PLAYFORJA · GitHub Pages · Sin apuestas ni dinero real.</small></footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog class="fairplay-dialog" id="app-coming-soon"><button class="evidence-close" type="button" data-close-app aria-label="Cerrar">×</button><span class="eyebrow">PLAYFORJA</span><h2>LA APP LLEGA PRONTO</h2><p>La experiencia actual de PLAYFORJA funciona como página web. La aplicación oficial todavía no está disponible y no se iniciará ninguna descarga.</p></dialog>
+  <dialog class="fairplay-dialog" id="fairplay-dialog"><button class="evidence-close" type="button" data-close-fairplay aria-label="Cerrar">×</button><span class="eyebrow">JUEGO JUSTO</span><h2>SIN PLATA REAL</h2><p>PLAYFORJA utiliza únicamente Monedas PF y XP como puntos internos de progresión. No son dinero, no se compran con apuestas y no tienen valor de retiro.</p></dialog>
 </body>
 </html>
