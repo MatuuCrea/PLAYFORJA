@@ -32,6 +32,11 @@
     }, {rootMargin:'-25% 0px -65% 0px'});
     sections.forEach(section => observer.observe(section));
   }
+  const appDialog = document.getElementById('app-coming-soon');
+  document.querySelector('[data-open-app]')?.addEventListener('click', () => appDialog?.showModal());
+  document.querySelector('[data-close-app]')?.addEventListener('click', () => appDialog?.close());
+  appDialog?.addEventListener('click', event => { if (event.target === appDialog) appDialog.close(); });
+
   const fairplayDialog = document.getElementById('fairplay-dialog');
   document.querySelector('[data-open-fairplay]')?.addEventListener('click', () => fairplayDialog?.showModal());
   document.querySelector('[data-close-fairplay]')?.addEventListener('click', () => fairplayDialog?.close());
