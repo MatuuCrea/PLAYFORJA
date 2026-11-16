@@ -68,3 +68,5 @@ Tipos aceptados: `win`, `elimination`, `team_minute`, `room_game`, `tournament_j
 
 - GitHub Actions valida sintaxis JavaScript, JSON del manifiesto y puntos esenciales de la PWA.
 - Se agregaron páginas iniciales de privacidad, términos y soporte. Son borradores: antes del lanzamiento público deben completarse datos del responsable, contacto privado, retención y revisión legal.
+
+- Migraciones aplicadas y versionadas para las correcciones recientes: `20261116182546_lock_profile_economy_fields` y `20261116182900_use_current_jwt_role_claim_for_game_events`.
