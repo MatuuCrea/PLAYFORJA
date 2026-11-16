@@ -158,16 +158,18 @@
   }
   function notifyError(message){showToast(message.includes('TOURNAMENT_FULL')?'Torneo lleno.':message.includes('INSUFFICIENT_PF')?'No te alcanza el saldo de Monedas PF.':'No se pudo completar la acción: '+message);}
   async function loadFrames(){
-    const {data,error}=await client.from('frames').select('*').eq('active',true).order('price_pf');
+    const {data,error}=await client.from('frames').select('*').eq('active',true);
     if(error){console.warn('Marcos:',error.message);return;}
     const owned=new Set();
     if(currentUser){
       const {data:ownedRows}=await client.from('user_frames').select('frame_id').eq('user_id',currentUser.id);
       (ownedRows||[]).forEach(row=>owned.add(row.frame_id));
     }
-    const cards=[...document.querySelectorAll('.frame-card')];
-    for(let i=0;i<Math.min(cards.length,data.length);i++){
-      const item=data[i],card=cards[i],button=card.querySelector('.buy-btn');
+    const frameCardClass={'marco-leyenda':'frame-legend','marco-fuego':'frame-fire','marco-oro':'frame-gold','marco-diamante':'frame-diamond'};
+    for(const item of (data||[])){
+      const preview=document.querySelector('.'+frameCardClass[item.slug]);
+      const card=preview?.closest('.frame-card');if(!card)continue;
+      const button=card.querySelector('.buy-btn');
       card.querySelector('h3').textContent=item.name;
       card.querySelector('b').textContent=Number(item.price_pf).toLocaleString('es-AR')+' PF';
       button.textContent=owned.has(item.id)?'Desbloqueado':'CANJEAR';
