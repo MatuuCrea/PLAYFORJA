@@ -4,6 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080808">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PLAYFORJA">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon.svg">
   <meta name="description" content="PLAYFORJA: torneos, salas, misiones y progresión competitiva. Forjá tu leyenda.">
   <title>PLAYFORJA — Forjá tu leyenda</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,7 +89,7 @@
       <div class="room-grid" id="room-list">
         <article class="room-card" data-search="duelo infernal volcan ardiente en curso"><div class="room-icon">⚔</div><div class="room-info"><span class="status live">● EN CURSO</span><h3>Duelo Infernal 1v1</h3><p>Mapa Volcán Ardiente</p><small>4 de 8 jugadores</small></div><button class="btn btn-outline join-btn" data-item="Sala Duelo Infernal">Unirse</button></article>
         <article class="room-card" data-search="torneo nocturno fortaleza nocturna esperando"><div class="room-icon">◈</div><div class="room-info"><span class="status waiting">● ESPERANDO</span><h3>Torneo Nocturno</h3><p>Mapa Fortaleza Nocturna</p><small>2 de 6 jugadores</small></div><button class="btn btn-outline join-btn" data-item="Sala Torneo Nocturno">Unirse</button></article>
-        <article class="room-card" data-search="en vivo campeonato directo finales liga fuego"><div class="room-icon">▶</div><div class="room-info"><span class="status live">● EN VIVO</span><h3>Campeonato en Directo</h3><p>Finales · Liga de Fuego</p><small>128 espectadores viendo</small></div><a class="btn btn-outline" href="#streaming">Ver directo</a></article>
+        <article class="room-card" data-search="en vivo campeonato directo finales liga fuego"><div class="room-icon">▶</div><div class="room-info"><span class="status waiting">● PRÓXIMAMENTE</span><h3>Canal de PLAYFORJA</h3><p>La sala de transmisión se habilitará al conectar el proveedor oficial.</p><small>Sin audiencia en vivo todavía</small></div><a class="btn btn-outline" href="#streaming">Ver estado</a></article>
       </div><p class="empty-state" id="empty-rooms" hidden>No encontramos salas con esa búsqueda.</p>
     </div></section>
 
@@ -95,12 +101,12 @@
         <article class="frame-card"><div class="frame-preview frame-gold"><span>PF</span></div><h3>Marco Oro</h3><b>1.200 XP</b><button class="btn btn-outline buy-btn" data-frame="Marco Oro">Comprar</button></article>
         <article class="frame-card"><div class="frame-preview frame-diamond"><span>PF</span></div><h3>Marco Diamante</h3><b>3.000 XP</b><button class="btn btn-outline buy-btn" data-frame="Marco Diamante">Comprar</button></article>
       </div>
-      <div class="credits-line"><span>CRÉDITOS PF <strong>12.450</strong></span><span>XP DISPONIBLE <strong>12.450</strong></span></div>
+      <div class="credits-line"><span>MONEDAS PF <strong>Iniciá sesión</strong></span><span>XP <strong>Iniciá sesión</strong></span></div>
     </section>
 
     <section class="section section-dark" id="misiones"><div class="section-wrap">
       <div class="section-heading"><div><div class="eyebrow">GANATE CADA ASCENSO</div><h2>PROGRESIÓN <em>QUE NO SE REGALA</em></h2></div><span class="section-index">03 / SUPERATE</span></div>
-      <div class="rank-panel"><div class="rank-top"><div><span class="eyebrow">TU CAMINO</span><h3>ORO <span>→</span> PLATINO</h3></div><strong>68<small>%</small></strong></div><div class="progress-track"><span style="width:68%"></span></div><div class="rank-labels"><span>BRONCE</span><span>PLATA</span><span class="current">ORO</span><span>PLATINO</span><span>DIAMANTE</span><span>LEYENDA</span></div></div>
+      <div class="rank-panel"><div class="rank-top"><div><span class="eyebrow">TU CAMINO</span><h3>INICIÁ SESIÓN PARA VER TU RANGO</h3></div><strong>—</strong></div><div class="progress-track"><span style="width:0%"></span></div><div class="rank-labels"><span>BRONCE</span><span>PLATA</span><span class="current">ORO</span><span>PLATINO</span><span>DIAMANTE</span><span>LEYENDA</span></div></div>
       <div class="mission-tabs" role="tablist" aria-label="Tipos de misiones">
         <button class="mission-tab active" type="button" data-mission-tab="daily">Diarias</button>
         <button class="mission-tab" type="button" data-mission-tab="weekly">Semanales</button>
@@ -124,10 +130,10 @@
     <section class="section section-dark" id="idiomas"><div class="section-wrap">
       <div class="section-heading"><div><div class="eyebrow">UNA ARENA, MUCHAS CULTURAS</div><h2>PLAYFORJA <em>GLOBAL</em></h2></div><span class="section-index">05 / CONECTÁ</span></div>
       <div class="language-layout"><div><h3>ELEGÍ TU IDIOMA</h3><div class="country-grid"><button class="country active" data-lang="es">🇦🇷 Argentina</button><button class="country" data-lang="es">🇪🇸 España</button><button class="country" data-lang="pt">🇧🇷 Brasil</button><button class="country" data-lang="en">🇺🇸 USA</button><button class="country" data-lang="fr">🇫🇷 Francia</button><button class="country" data-lang="de">🇩🇪 Alemania</button><button class="country" data-lang="ja">🇯🇵 Japón</button><button class="country" data-lang="ja">🇰🇷 Corea</button></div><p class="language-list">Español Argentino · Português · English · Français · Deutsch · Japonés</p><p class="muted-copy">La app se adapta a tu país.</p></div><div class="hello-card"><span class="eyebrow">BIENVENIDO A LA FORJA</span><strong id="hello-text">Hola Matuu</strong><small>Olá Matuu · Hello Matuu</small></div></div>
-      <div class="world-map"><div class="map-heading"><span>◉</span> MAPA MUNDIAL PLAYFORJA</div><div class="map-regions"><article><b>LATAM</b><span>Argentina · Brasil · México</span><i>● ● ●</i></article><article><b>NA &amp; EU</b><span>USA · España · Francia</span><i>● ● ●</i></article><article><b>APAC</b><span>Japón</span><i>●</i></article></div><p>Jugadores de distintos países conectados · Colaboración global en tiempo real</p></div>
+      <div class="world-map"><div class="map-heading"><span>◉</span> REGIONES PREVISTAS PLAYFORJA</div><div class="map-regions"><article><b>LATAM</b><span>Argentina · Brasil · México</span><i>● ● ●</i></article><article><b>NA &amp; EU</b><span>USA · España · Francia</span><i>● ● ●</i></article><article><b>APAC</b><span>Japón</span><i>●</i></article></div><p>Regiones previstas para expansión. La conexión regional y el mapa en tiempo real todavía no están habilitados.</p></div>
     </div></section>
 
-    <section class="section section-wrap" id="streaming"><div class="section-heading"><div><div class="eyebrow">LA COMPETENCIA EN DIRECTO</div><h2>STREAMING <em>EN VIVO</em></h2></div><span class="section-index">06 / MIRÁ</span></div><div class="stream-card"><div class="stream-screen"><span class="stream-live">● EN VIVO</span><div class="play-mark">▶</div><span>PLAYFORJA ARENA</span></div><div class="stream-info"><span class="eyebrow">LIGA DE FUEGO · FINALES</span><h3>CAMPEONATO EN DIRECTO</h3><p>La emoción de la arena, en tiempo real.</p><strong>◉ 128 espectadores viendo</strong><small>El reproductor oficial se habilitará cuando se conecte el canal de streaming.</small></div></div></section>
+    <section class="section section-wrap" id="streaming"><div class="section-heading"><div><div class="eyebrow">LA COMPETENCIA EN DIRECTO</div><h2>STREAMING <em>EN VIVO</em></h2></div><span class="section-index">06 / MIRÁ</span></div><div class="stream-card"><div class="stream-screen"><span class="stream-live">● PRÓXIMAMENTE</span><div class="play-mark">PF</div><span>PLAYFORJA ARENA</span></div><div class="stream-info"><span class="eyebrow">LIGA DE FUEGO · FINALES</span><h3>CAMPEONATO EN DIRECTO</h3><p>La emoción de la arena, en tiempo real.</p><strong>Canal oficial todavía no conectado</strong><small>El reproductor y las cifras de audiencia aparecerán únicamente cuando se integre un proveedor de streaming real.</small></div></div></section>
 
     <section class="section evidence-section" id="evidencia"><div class="section-wrap">
       <div class="section-heading"><div><div class="eyebrow">TRANSPARENCIA DEL PROYECTO</div><h2>EVIDENCIA <em>OFICIAL</em></h2></div><span class="section-index">07 / REGISTRO</span></div>
@@ -135,10 +141,10 @@
       <div class="evidence-grid" id="evidence-gallery"><p class="evidence-empty">Cargando evidencias validadas…</p></div>
     </div></section>
 
-    <section class="download-cta section-wrap" id="descargar"><div><span class="eyebrow">TU LEYENDA EMPIEZA ACÁ</span><h2>ENTRÁ A LA <em>FORJA.</em></h2><p>Prepará tu equipo. La arena te espera.</p></div><a class="btn btn-gold" href="https://github.com/MatuuCrea/PLAYFORJA/releases" target="_blank" rel="noopener">Ver versiones y descargas ↗</a></section>
+    <section class="download-cta section-wrap" id="descargar"><div><span class="eyebrow">TU LEYENDA EMPIEZA ACÁ</span><h2>ENTRÁ A LA <em>FORJA.</em></h2><p>Prepará tu equipo. La arena te espera.</p></div><div class="hero-actions"><button class="btn btn-gold" id="install-app" type="button" hidden>Instalar PLAYFORJA ↓</button><a class="btn btn-outline" href="https://github.com/MatuuCrea/PLAYFORJA/releases" target="_blank" rel="noopener">Ver versiones y descargas ↗</a></div></section>
   </main>
 
-  <footer class="site-footer"><div class="footer-brand"><strong>PLAYFORJA</strong><span>FORJÁ TU LEYENDA</span></div><div class="footer-meta"><span>Soporte 24 y 7</span><span>Argentina · GMT −3</span><a href="https://github.com/MatuuCrea" target="_blank" rel="noopener">Volver al Perfil ↗</a></div><small>© <span id="year"></span> PLAYFORJA. Todos los derechos reservados. Sin apuestas ni dinero real.</small></footer>
+  <footer class="site-footer"><div class="footer-brand"><strong>PLAYFORJA</strong><span>FORJÁ TU LEYENDA</span></div><div class="footer-meta"><a href="./soporte.html">Soporte</a><a href="./privacidad.html">Privacidad</a><a href="./terminos.html">Términos</a><span>Argentina · GMT −3</span><a href="https://github.com/MatuuCrea" target="_blank" rel="noopener">GitHub ↗</a></div><small>© <span id="year"></span> PLAYFORJA. Todos los derechos reservados. Sin apuestas ni dinero real.</small></footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
