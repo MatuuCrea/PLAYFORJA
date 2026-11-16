@@ -151,7 +151,7 @@
     if(activeFilter) document.querySelectorAll('.game-card').forEach(card=>{card.hidden=card.dataset.platform!==activeFilter;});
     if(dynamicHost){
       dynamicHost.innerHTML=userTournaments.map(item=>{
-        const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registered||0;
+        const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registration_count||0;
         return '<article class="game-card community-card" data-platform="'+escapeHtml(item.platform)+'" data-user-created="true"><div class="game-visual"><span class="game-symbol">✦</span><span class="game-label">COMUNIDAD PLAYFORJA</span></div><div class="card-content"><span class="pill">'+escapeHtml(item.platform)+' · '+escapeHtml(item.mode)+'</span><h3>'+escapeHtml(item.title)+'</h3><p>Torneo creado por un jugador de la comunidad.</p><div class="card-meta"><span>Cupos</span><b>'+count+' de '+item.capacity+' anotados</b></div><button class="btn btn-gold full community-join" data-id="'+item.id+'" '+(item.status!=='open'?'disabled':'')+'>'+(item.status==='full'?'Torneo lleno':'UNIRSE')+'</button></div></article>';
       }).join('');
       dynamicHost.querySelectorAll('.community-join').forEach(button=>button.addEventListener('click',async()=>{
