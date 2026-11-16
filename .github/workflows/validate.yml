@@ -1,4 +1,4 @@
-name: Validate PLAYFORJA
+name: Validate PLAYFORJA Web
 on:
   push:
     branches: [main, feature/supabase-auth-foundation]
@@ -14,13 +14,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Check JavaScript syntax
+      - name: Check web JavaScript syntax
         run: |
           node --check auth.js
           node --check script.js
-          node --check sw.js
-      - name: Validate PWA manifest
-        run: node -e "const m=JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8')); if(!m.name || !m.start_url || !m.icons?.length) process.exit(1)"
-      - name: Validate PWA wiring
+      - name: Verify web-only delivery
         run: |
-          node -e "const fs=require('fs'); const h=fs.readFileSync('index.html','utf8'); const s=fs.readFileSync('script.js','utf8'); for(const x of ['manifest.webmanifest','id=\"install-app\"']) if(!h.includes(x)) throw Error('Missing '+x); if(!s.includes('serviceWorker.register')) throw Error('Service worker is not registered')"
+          node -e "const fs=require('fs'); const h=fs.readFileSync('index.html','utf8'); const s=fs.readFileSync('script.js','utf8'); const p=JSON.parse(fs.readFileSync('package.json','utf8')); if(!h.includes('LA APP') || !h.includes('LLEGA PRONTO')) throw Error('Missing app coming soon message'); if(h.includes('rel=\"manifest\"') || h.includes('install-app') || s.includes('serviceWorker.register') || p.dependencies?.['@capacitor/core']) throw Error('Unexpected installable app wiring'); if(fs.existsSync('capacitor.config.json') || fs.existsSync('manifest.webmanifest') || fs.existsSync('sw.js') || fs.existsSync('android')) throw Error('Android/PWA artifact remains in web branch');"
