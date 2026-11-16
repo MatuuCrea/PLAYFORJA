@@ -35,3 +35,5 @@
 .globe-selection strong{font:700 20px var(--display);color:var(--gold2)}
 .globe-selection small,.globe-tools p{font-size:10px;color:var(--muted);line-height:1.6}
 @media(max-width:800px){.globe-layout{grid-template-columns:1fr}.globe-stage{max-width:100%}.globe-tools{padding:0 4px}}
+
+.mission-card-top{display:flex;align-items:center;gap:9px}.mission-icon{font-size:22px;filter:drop-shadow(0 0 8px rgba(232,184,79,.25))}.mission-card-top .mission-kicker{flex:1}.mission-difficulty{font-size:9px;color:#e8b84f;border:1px solid rgba(232,184,79,.3);padding:5px 7px}
