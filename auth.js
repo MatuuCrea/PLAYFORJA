@@ -225,6 +225,13 @@
         await loadRooms();
       };
     }
+    // Las tarjetas sin registro en Supabase permanecen visibles, pero nunca simulan actividad ni habilitan acciones.
+    for(let i=(data||[]).length;i<cards.length;i++){
+      const card=cards[i],statusBadge=card.querySelector('.status'),button=card.querySelector('.join-btn');
+      if(statusBadge){statusBadge.textContent='● PRÓXIMAMENTE';statusBadge.classList.remove('live');statusBadge.classList.add('waiting');}
+      const small=card.querySelector('small');if(small)small.textContent='Se habilitará cuando exista una sala publicada.';
+      if(button){button.disabled=true;button.textContent='Próximamente';button.onclick=null;}
+    }
   }
 
   const createTournamentButton=document.getElementById('create-tournament');
