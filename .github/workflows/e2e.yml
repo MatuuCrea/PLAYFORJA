@@ -1,0 +1,45 @@
+name: PLAYFORJA browser E2E
+on:
+  push:
+    branches: [feature/supabase-auth-foundation]
+    paths:
+      - 'index.html'
+      - 'style.css'
+      - 'auth.js'
+      - 'script.js'
+      - 'manifest.webmanifest'
+      - 'tests/**'
+      - 'playwright.config.js'
+      - 'package.json'
+      - '.github/workflows/e2e.yml'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  chromium-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PLAYFORJA_E2E_EMAIL: ${{ secrets.PLAYFORJA_E2E_EMAIL }}
+      PLAYFORJA_E2E_PASSWORD: ${{ secrets.PLAYFORJA_E2E_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run browser tests
+        run: npm run test:e2e
+      - name: Upload browser report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: PLAYFORJA-playwright-report
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
