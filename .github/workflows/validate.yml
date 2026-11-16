@@ -1,0 +1,26 @@
+name: Validate PLAYFORJA
+on:
+  push:
+    branches: [main, feature/supabase-auth-foundation]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: |
+          node --check auth.js
+          node --check script.js
+          node --check sw.js
+      - name: Validate PWA manifest
+        run: node -e "const m=JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8')); if(!m.name || !m.start_url || !m.icons?.length) process.exit(1)"
+      - name: Validate PWA wiring
+        run: |
+          node -e "const fs=require('fs'); const h=fs.readFileSync('index.html','utf8'); const s=fs.readFileSync('script.js','utf8'); for(const x of ['manifest.webmanifest','id=\"install-app\"']) if(!h.includes(x)) throw Error('Missing '+x); if(!s.includes('serviceWorker.register')) throw Error('Service worker is not registered')"
