@@ -76,3 +76,13 @@ test('el plano mantiene las secciones y el orden de navegación solicitados', as
   }
   await expect(page.locator('.main-nav a').filter({hasText:'La App llega pronto'})).toHaveAttribute('href','#descargar');
 });
+
+test('el diseño móvil se apila sin desbordar horizontalmente', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await expect(page.locator('.hero-panel')).toBeVisible();
+  await expect(page.locator('.tournaments-panel')).toBeVisible();
+  await expect(page.locator('.emblem-panel')).toBeVisible();
+  const width = await page.evaluate(() => document.documentElement.scrollWidth);
+  expect(width).toBeLessThanOrEqual(390);
+});
