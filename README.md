@@ -92,8 +92,11 @@ El workflow `PLAYFORJA browser E2E` ejecuta Chromium contra la página local y c
 
 Las implementaciones privilegiadas (`SECURITY DEFINER`) viven en el esquema no expuesto `private`; los RPC públicos son wrappers `SECURITY INVOKER` con permisos explícitos. Los wrappers de usuario requieren `authenticated`, los eventos verificados solo aceptan `service_role`, y los agregados públicos se sirven desde tablas de conteos sin exponer IDs de usuarios. La tabla `verified_game_events` no concede acceso de tabla a `anon` ni `authenticated`. Tras este cambio, Supabase Security Advisor devuelve **cero hallazgos**. Los contadores públicos son tablas agregadas de solo lectura, con RLS y triggers internos.
 
-## URL temporal y pruebas autenticadas
+## Vista previa, URLs de Auth y cuenta E2E
 
-- URL temporal de GitHub Pages configurada actualmente en el repositorio: `https://matuucrea.github.io/PLAYFORJA/`. La publicación activa sigue saliendo de `main`; el contenido de esta rama no se publica allí mientras el PR siga en borrador.
-- El formulario de registro envía el retorno de confirmación a la ruta actual del sitio. En Supabase Auth → URL Configuration falta agregar la URL temporal anterior a Site URL / Redirect URLs permitidas; no se modificó esa configuración del proyecto porque la conexión disponible no ofrece la operación de Auth URL Configuration.
-- Para activar la prueba autenticada del workflow, crear una cuenta E2E aislada en Supabase y guardar `PLAYFORJA_E2E_EMAIL` y `PLAYFORJA_E2E_PASSWORD` en GitHub Actions Secrets. No usar cuentas personales ni credenciales de producción.
+- **Vista previa visual de esta rama (HTML Preview externo):** https://htmlpreview.github.io/?https://raw.githubusercontent.com/MatuuCrea/PLAYFORJA/feature/supabase-auth-foundation/index.html. Sirve para inspeccionar el HTML/CSS de la rama sin fusionar el PR; no es una publicación oficial de GitHub Pages.
+- **GitHub Pages oficial:** `https://matuucrea.github.io/PLAYFORJA/`. La publicación activa sigue saliendo de `main`; el contenido de esta rama no se publica allí mientras el PR siga en borrador.
+- El formulario de registro usa `new URL('./', window.location.href)` como `emailRedirectTo`. En Supabase Auth → URL Configuration configurar Site URL `https://matuucrea.github.io/PLAYFORJA/` y Redirect URLs `https://matuucrea.github.io/PLAYFORJA/**`, `http://127.0.0.1:4173/**` y `http://localhost:4173/**`.
+- La cuenta E2E debe ser independiente, confirmada por correo y sin datos personales. Guardar sus credenciales únicamente como secretos de repositorio `PLAYFORJA_E2E_EMAIL` y `PLAYFORJA_E2E_PASSWORD`.
+- Pasos completos, incluyendo la creación de la cuenta, los secretos, la ejecución de Actions y la limpieza de APK históricos: [docs/GUIA-E2E-Y-AUTH.md](docs/GUIA-E2E-Y-AUTH.md).
+- La configuración de URLs de Supabase debe realizarla el propietario desde el Dashboard; no se cambió automáticamente desde esta sesión.
