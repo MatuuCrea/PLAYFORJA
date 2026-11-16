@@ -129,3 +129,54 @@ body{background:#0A0A0A;background-image:radial-gradient(ellipse at 4% 8%,rgba(2
 @media(max-width:380px){.hero-panel h1{font-size:57px}.tournament-cards .game-card{grid-template-columns:76px minmax(0,1fr)}.tournament-cards .card-content{padding:9px}.map-region-list{grid-template-columns:1fr}.rank-badges small{font-size:5px}}
 
 .language-strip{position:relative;z-index:1;padding-bottom:18px}.language-panel{padding:15px 18px}.language-panel .country-grid{display:flex;flex-wrap:wrap;gap:8px;position:relative;z-index:1}.language-panel .country{border:1px solid #594323;background:#11100e;color:#d9c9a6;padding:8px 13px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer}.language-panel .country.active,.language-panel .country:hover{background:#d4af37;color:#17110a;border-color:#f4d477}.language-list{position:relative;z-index:1;font-size:9px;color:#bdb29f}.language-list strong{color:#f4d477}
+
+
+/* PLAYFORJA visual recovery — branch preview */
+.brand-mark{width:68px;height:68px;flex:0 0 68px;filter:drop-shadow(0 0 10px #d4af3780)}
+.brand-word{font-size:31px;letter-spacing:1.2px}
+.arena-layout{min-height:0;align-items:stretch}
+.hero-panel h1{font-size:clamp(62px,6.5vw,112px);line-height:.82;letter-spacing:-1.8px;white-space:nowrap;text-shadow:0 0 22px #d4af3790,0 5px 28px #ef642566}
+.hero-panel h1 span{color:#f4d477;text-shadow:0 0 18px #d4af3780}
+.hero-slogan{font-size:clamp(29px,2.8vw,44px)}
+.lower-grid{align-items:start;align-content:start}
+.lower-panel{height:auto;min-height:0}
+.room-grid{align-content:start}
+.room-card{min-height:112px;align-items:center}
+.room-card .room-info h3{font-size:clamp(18px,1.5vw,23px)}
+.room-card .btn{white-space:nowrap}
+#streaming.section{padding:44px 0}
+@media(max-width:1100px){
+  .site-header{gap:12px}
+  .brand-mark{width:60px;height:60px;flex-basis:60px}
+  .brand-word{font-size:27px}
+  .menu-toggle{display:block;margin-left:auto}
+  .main-nav{display:none;position:absolute;top:100%;left:0;right:0;width:100%;padding:14px 4%;background:#090908;border-bottom:1px solid #80652c;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;justify-content:stretch}
+  .main-nav.open{display:grid}
+  .main-nav a{padding:9px 7px;text-align:center;border:1px solid #493a21;border-radius:5px}
+  .main-nav .nav-download{grid-column:1/-1}
+}
+@media(max-width:950px){
+  .arena-layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
+  .hero-panel{grid-column:1;grid-row:1}
+  .emblem-panel{grid-column:2;grid-row:1}
+  .tournaments-panel{grid-column:1/-1;grid-row:2}
+  .lower-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+}
+@media(max-width:620px){
+  .brand-mark{width:54px;height:54px;flex-basis:54px}
+  .brand-word{font-size:24px}
+  .arena-layout{grid-template-columns:minmax(0,1fr);align-items:stretch}
+  .hero-panel,.tournaments-panel,.emblem-panel{grid-column:1;grid-row:auto}
+  .hero-panel h1{font-size:clamp(68px,17vw,92px);white-space:normal}
+  .hero-slogan{font-size:34px}
+  .lower-grid{grid-template-columns:1fr;align-items:start}
+  .room-card{grid-template-columns:38px minmax(0,1fr) auto;gap:10px}
+  .room-card .btn{grid-column:3;grid-row:1;align-self:center}
+  #streaming.section{padding:32px 0}
+}
+@media(max-width:380px){
+  .brand-mark{width:46px;height:46px;flex-basis:46px}
+  .brand-word{font-size:21px}
+  .room-card{grid-template-columns:32px minmax(0,1fr)}
+  .room-card .btn{grid-column:2;grid-row:auto}
+}
