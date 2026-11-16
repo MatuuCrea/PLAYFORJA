@@ -16,3 +16,22 @@
 .community-tournaments{margin-top:16px}.community-card .game-visual{min-height:100px}
 
 .evidence-empty{grid-column:1/-1;padding:25px;border:1px dashed #554326;color:var(--muted);font-size:12px}.evidence-item{display:grid;gap:8px;text-align:left;padding:12px;background:#11100e;border:1px solid var(--line);color:#fff;cursor:pointer}.evidence-item img{width:100%;aspect-ratio:16/9;object-fit:cover}.evidence-item span{color:var(--gold2);font-weight:800}.evidence-item small{color:var(--muted)}.evidence-dialog{max-width:min(850px,94vw);max-height:90vh;padding:20px;background:#100e0b;color:#eee;border:1px solid var(--gold);}.evidence-dialog::backdrop{background:#000c}.evidence-dialog img{max-width:100%;max-height:65vh;object-fit:contain}.evidence-close{float:right;background:none;border:0;color:var(--gold2);font-size:28px;cursor:pointer}
+
+/* Interactive reference globe */
+.map-heading small{display:block;margin-top:7px;font:700 9px var(--font);letter-spacing:1.5px;color:#a99a7d}
+.globe-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(250px,.8fr);gap:24px;align-items:center;margin-top:22px}
+.globe-stage{position:relative;min-width:0;border:1px solid rgba(232,184,79,.15);background:radial-gradient(ellipse at 50% 48%,rgba(197,132,43,.12),transparent 64%),#080909;border-radius:12px;overflow:hidden}
+#playforja-globe{display:block;width:100%;height:auto;touch-action:none;cursor:grab}
+#playforja-globe.dragging{cursor:grabbing}
+.globe-hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;color:#a99b81;font-size:9px;pointer-events:none}
+.globe-tools{display:flex;flex-direction:column;gap:12px}
+.globe-tools>label,.globe-selection>span{font-size:9px;font-weight:800;letter-spacing:1.4px;color:var(--gold2)}
+.globe-search-row{display:flex;gap:7px}
+.globe-search-row input{min-width:0;flex:1;background:#080808;border:1px solid #514128;color:#fff;padding:10px;font-size:11px}
+.globe-presets{display:flex;flex-wrap:wrap;gap:6px}
+.globe-presets button{border:1px solid #514128;background:#12100d;color:#d6c39a;padding:7px 9px;font-size:9px;cursor:pointer}
+.globe-presets button:hover{border-color:var(--gold);color:var(--gold2)}
+.globe-selection{padding:15px;border:1px solid var(--line);background:#100e0b;display:flex;flex-direction:column;gap:7px;min-height:82px}
+.globe-selection strong{font:700 20px var(--display);color:var(--gold2)}
+.globe-selection small,.globe-tools p{font-size:10px;color:var(--muted);line-height:1.6}
+@media(max-width:800px){.globe-layout{grid-template-columns:1fr}.globe-stage{max-width:100%}.globe-tools{padding:0 4px}}
