@@ -64,7 +64,7 @@
       if(mode==='signup'){
         const usernameValue=String(data.get('username')||'').trim();
         if(usernameValue.length<3) throw new Error('El nombre de jugador debe tener al menos 3 caracteres.');
-        const {data:result,error}=await client.auth.signUp({email,password,options:{data:{username:usernameValue}}});
+        const {data:result,error}=await client.auth.signUp({email,password,options:{data:{username:usernameValue},emailRedirectTo:new URL('./',window.location.href).toString()}});
         if(error) throw error;
         if(result.session){message('Cuenta creada. Ya podés entrar a PLAYFORJA.');}
         else message('Te enviamos un correo para confirmar tu cuenta. Revisá tu bandeja de entrada.');
