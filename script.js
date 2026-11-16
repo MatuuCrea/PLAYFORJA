@@ -60,7 +60,7 @@
     document.getElementById('empty-rooms').hidden = visible !== 0;
   });
 
-  const greetings = {es:'Hola',pt:'Olá',en:'Hello',fr:'Bonjour',de:'Hallo',ja:'こんにちは'};
+  const greetings = {es:'Español',pt:'Português',en:'English',fr:'Français',de:'Deutsch',ja:'日本語'};
   document.querySelectorAll('.country').forEach(button => button.addEventListener('click', () => {
     document.querySelectorAll('.country').forEach(item => item.classList.remove('active'));
     button.classList.add('active');
