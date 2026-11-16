@@ -7,6 +7,11 @@ test('la portada carga datos de prueba reales desde Supabase sin inventar activi
   await expect(page.locator('#torneos .game-card')).toHaveCount(3);
   await expect(page.locator('#salas .room-card').filter({ hasText: 'Duelo Infernal' }).locator('.status')).toContainText('MUESTRA');
   await expect(page.locator('#salas .room-card').filter({ hasText: 'Torneo Nocturno' }).locator('.status')).toContainText('MUESTRA');
+  await expect(page.locator('#salas .room-card')).toHaveCount(3);
+  await expect(page.locator('#salas .room-card').filter({ hasText: 'Campeonato en Vivo' })).toBeVisible();
+  await expect(page.locator('.brand-mark')).toBeVisible();
+  await expect(page.locator('.hero-panel h1')).toContainText('PLAYFORJA');
+  await expect(page.locator('.hero-slogan')).toHaveText('Forjá tu leyenda');
   await expect(page.locator('#marcos .frame-card').first().locator('b')).toContainText('PF');
   await expect(page.locator('#streaming')).toContainText('PRÓXIMAMENTE');
   await expect(page.locator('#streaming')).toContainText('proveedor autorizado');
