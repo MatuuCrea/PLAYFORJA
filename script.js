@@ -17,6 +17,25 @@
     menuToggle.setAttribute('aria-expanded', String(open));
     menuToggle.textContent = open ? '×' : '☰';
   });
+  const navLinks = [...nav.querySelectorAll('a[href^="#"]')];
+  const sections = navLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === '#' + entry.target.id) link.setAttribute('aria-current','location');
+          else link.removeAttribute('aria-current');
+        });
+      });
+    }, {rootMargin:'-25% 0px -65% 0px'});
+    sections.forEach(section => observer.observe(section));
+  }
+  const fairplayDialog = document.getElementById('fairplay-dialog');
+  document.querySelector('[data-open-fairplay]')?.addEventListener('click', () => fairplayDialog?.showModal());
+  document.querySelector('[data-close-fairplay]')?.addEventListener('click', () => fairplayDialog?.close());
+  fairplayDialog?.addEventListener('click', event => { if (event.target === fairplayDialog) fairplayDialog.close(); });
+
   nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
     nav.classList.remove('open');
     menuToggle.setAttribute('aria-expanded', 'false');
