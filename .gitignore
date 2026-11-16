@@ -1,0 +1,9 @@
+node_modules/
+www/
+android/
+.gradle/
+*.jks
+*.keystore
+.env
+.env.*
+!.env.example
