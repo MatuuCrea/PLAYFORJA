@@ -221,6 +221,35 @@
     await loadTournaments();
   });
 
+
+  async function loadSeasons(){
+    const {data,error}=await client.from('seasons').select('id,name,starts_at,ends_at,status').order('starts_at',{ascending:true});
+    if(error){console.warn('Temporadas:',error.message);return;}
+    const cards=[...document.querySelectorAll('.season-card')];
+    for(let i=0;i<Math.min(cards.length,(data||[]).length);i++){
+      const season=data[i],card=cards[i];
+      card.querySelector('.season-number').textContent='TEMPORADA '+String(i+1).padStart(2,'0');
+      card.querySelector('.pill').textContent=season.status==='finished'?'FINALIZADA':season.status==='active'?'EN CURSO':'PRÓXIMAMENTE';
+      card.querySelector('h3').textContent=season.name;
+      const dates=[season.starts_at,season.ends_at].filter(Boolean).map(value=>new Date(value).toLocaleDateString('es-AR'));
+      card.querySelector('ul').innerHTML='<li>'+ (dates.length===2?'Desde '+dates[0]+' hasta '+dates[1]:'Fechas por anunciar')+'</li><li>Estado: '+(season.status==='finished'?'Finalizada':season.status==='active'?'En curso':'Próximamente')+'</li><li>Recompensa: consultar catálogo de marcos</li>';
+    }
+  }
+  async function loadEvidence(){
+    const host=document.getElementById('evidence-gallery');if(!host)return;
+    const {data,error}=await client.from('evidence').select('id,title,description,image_url,created_at,owner_id').eq('validated',true).order('created_at',{ascending:false});
+    if(error){host.textContent='No se pudieron cargar las evidencias: '+error.message;return;}
+    if(!data?.length){host.innerHTML='<p class="evidence-empty">Todavía no hay capturas validadas publicadas. Esta galería solo muestra evidencias reales aprobadas por la comunidad.</p>';return;}
+    host.innerHTML=data.map(item=>'<button type="button" class="evidence-item" data-evidence-id="'+item.id+'"><img loading="lazy" src="'+escapeHtml(item.image_url)+'" alt="'+escapeHtml(item.title)+'"><span>'+escapeHtml(item.title)+'</span><small>'+new Date(item.created_at).toLocaleDateString('es-AR')+'</small></button>').join('');
+    host.querySelectorAll('.evidence-item').forEach(button=>button.addEventListener('click',()=>{
+      const item=data.find(entry=>entry.id===button.dataset.evidenceId);if(!item)return;
+      let dialog=document.getElementById('evidence-dialog');
+      if(!dialog){dialog=document.createElement('dialog');dialog.id='evidence-dialog';dialog.className='evidence-dialog';document.body.appendChild(dialog);}
+      dialog.innerHTML='<button type="button" class="evidence-close" aria-label="Cerrar">×</button><img src="'+escapeHtml(item.image_url)+'" alt="'+escapeHtml(item.title)+'"><h3>'+escapeHtml(item.title)+'</h3><p>'+escapeHtml(item.description||'Evidencia validada')+'</p><small>'+new Date(item.created_at).toLocaleString('es-AR')+' · Jugador '+item.owner_id.slice(0,8)+'</small>';
+      dialog.querySelector('button').onclick=()=>dialog.close();dialog.showModal();
+    }));
+  }
+
   let missionCategory='daily',missionCache=[];
   async function loadMissions(){
     const host=document.getElementById('mission-list');if(!host)return;
@@ -283,6 +312,6 @@
     else {loadFrames();loadTournaments();loadRooms();loadMissions();}
   });
 
-  loadTournaments();loadFrames();loadRooms();loadMissions();
+  loadTournaments();loadFrames();loadRooms();loadMissions();loadSeasons();loadEvidence();
   window.PLAYFORJA = Object.freeze({supabase:client, getUser:()=>currentUser});
 })();
