@@ -86,5 +86,106 @@
     if(error) message('No se pudo recuperar la sesión: '+error.message,true);
     else sync(data.session?.user??null);
   });
+
+  async function requireLogin(){
+    if(currentUser) return true;
+    show();form.hidden=false;logout.hidden=true;setMode('login');
+    message('Para realizar esta acción, primero iniciá sesión.');
+    return false;
+  }
+  async function refreshProfile(){
+    if(!currentUser) return;
+    const {data,error}=await client.from('profiles').select('pf_balance,xp,username').eq('id',currentUser.id).single();
+    if(error){console.warn('No se pudo cargar el perfil:',error.message);return;}
+    document.querySelectorAll('.balance strong').forEach(el=>el.textContent=Number(data.pf_balance).toLocaleString('es-AR')+' PF');
+    const credits=document.querySelector('.credits-line');
+    if(credits) credits.innerHTML='<span>MONEDAS PF <strong>'+Number(data.pf_balance).toLocaleString('es-AR')+'</strong></span><span>XP <strong>'+Number(data.xp).toLocaleString('es-AR')+'</strong></span>';
+  }
+  async function loadTournaments(){
+    const {data,error}=await client.from('tournaments').select('*').order('created_at');
+    if(error){console.warn('Torneos:',error.message);return;}
+    const cards=[...document.querySelectorAll('.game-card')];
+    for(let i=0;i<Math.min(cards.length,data.length);i++){
+      const item=data[i],card=cards[i],button=card.querySelector('.join-btn');
+      const {count}=await client.from('tournament_registrations').select('id',{count:'exact',head:true}).eq('tournament_id',item.id);
+      card.querySelector('h3').textContent=item.title;
+      card.querySelector('.pill').textContent=item.platform+' · '+item.mode;
+      card.querySelector('.card-meta b').textContent=(count||0)+' de '+item.capacity+' anotados';
+      button.disabled=item.status!=='open' && item.status!=='full';
+      button.textContent=item.status==='full'?'Torneo lleno':'UNIRSE';
+      button.dataset.tournamentId=item.id;
+      button.onclick=async()=>{
+        if(!await requireLogin()) return;
+        button.disabled=true;
+        const {data:result,error:joinError}=await client.rpc('join_tournament',{p_tournament_id:item.id});
+        if(joinError){notifyError(joinError.message);button.disabled=false;return;}
+        button.textContent=result.already_joined?'Ya estás unido':'Te uniste al torneo';
+        notify(result.already_joined?'Ya estabas anotado.':'Te uniste al torneo.');
+        await loadTournaments();
+      };
+    }
+  }
+  function notifyError(message){
+    const toast=document.getElementById('toast');
+    if(toast){toast.textContent=message.includes('TOURNAMENT_FULL')?'Torneo lleno.':message.includes('INSUFFICIENT_PF')?'No te alcanza el saldo de Monedas PF.':'No se pudo completar la acción: '+message;toast.classList.add('show');}
+  }
+  async function loadFrames(){
+    const {data,error}=await client.from('frames').select('*').eq('active',true).order('price_pf');
+    if(error){console.warn('Marcos:',error.message);return;}
+    const owned=new Set();
+    if(currentUser){
+      const {data:ownedRows}=await client.from('user_frames').select('frame_id').eq('user_id',currentUser.id);
+      (ownedRows||[]).forEach(row=>owned.add(row.frame_id));
+    }
+    const cards=[...document.querySelectorAll('.frame-card')];
+    for(let i=0;i<Math.min(cards.length,data.length);i++){
+      const item=data[i],card=cards[i],button=card.querySelector('.buy-btn');
+      card.querySelector('h3').textContent=item.name;
+      card.querySelector('b').textContent=Number(item.price_pf).toLocaleString('es-AR')+' PF';
+      button.textContent=owned.has(item.id)?'Desbloqueado':'CANJEAR';
+      button.disabled=owned.has(item.id);
+      button.onclick=async()=>{
+        if(!await requireLogin()) return;
+        button.disabled=true;
+        const {data:result,error:buyError}=await client.rpc('purchase_frame',{p_frame_id:item.id});
+        if(buyError){notifyError(buyError.message);button.disabled=false;return;}
+        notify(result.already_owned?'Ese marco ya es tuyo.':'Marco desbloqueado.');
+        await refreshProfile();await loadFrames();
+      };
+    }
+  }
+  async function loadRooms(){
+    const {data,error}=await client.from('rooms').select('*').order('created_at');
+    if(error){console.warn('Salas:',error.message);return;}
+    const cards=[...document.querySelectorAll('.room-card')];
+    for(let i=0;i<Math.min(cards.length,data.length);i++){
+      const item=data[i],card=cards[i],button=card.querySelector('.join-btn');
+      if(!button) continue;
+      card.querySelector('h3').textContent=item.name;
+      card.querySelector('p').textContent=item.description;
+      const {count}=await client.from('room_members').select('user_id',{count:'exact',head:true}).eq('room_id',item.id);
+      card.querySelector('small').textContent=(count||0)+' de '+item.capacity+' jugadores';
+      button.textContent=item.status==='full'?'Sala llena':'Unirse';
+      button.disabled=item.status!=='open';
+      button.onclick=async()=>{
+        if(!await requireLogin()) return;
+        button.disabled=true;
+        const {data:result,error:joinError}=await client.rpc('join_room',{p_room_id:item.id});
+        if(joinError){notifyError(joinError.message);button.disabled=false;return;}
+        notify(result.already_joined?'Ya estás en esta sala.':'Te uniste a la sala.');
+        await loadRooms();
+      };
+    }
+  }
+  async function loadAccountData(){
+    if(!currentUser) return;
+    await Promise.all([refreshProfile(),loadTournaments(),loadFrames(),loadRooms()]);
+  }
+  client.auth.onAuthStateChange((_event,session)=>{
+    sync(session?.user??null);
+    if(session?.user) setTimeout(loadAccountData,0);
+    else {loadFrames();loadTournaments();loadRooms();}
+  });
+
   window.PLAYFORJA = Object.freeze({supabase:client, getUser:()=>currentUser});
 })();
