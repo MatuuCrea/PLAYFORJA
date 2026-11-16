@@ -180,16 +180,69 @@
       };
     }
   }
+
+  let missionCategory='daily',missionCache=[];
+  async function loadMissions(){
+    const host=document.getElementById('mission-list');if(!host)return;
+    if(!currentUser){host.innerHTML='<p class="mission-empty">Iniciá sesión para ver tus misiones. Tu progreso se guarda en tu cuenta.</p>';return;}
+    host.innerHTML='<p class="mission-empty">Cargando tus misiones…</p>';
+    const {data,error}=await client.rpc('get_my_missions');
+    if(error){host.textContent='No se pudieron cargar las misiones: '+error.message;return;}
+    missionCache=data||[];
+    renderMissions();
+  }
+  function renderMissions(){
+    const host=document.getElementById('mission-list');if(!host)return;
+    const rows=missionCache.filter(m=>m.category===missionCategory);
+    if(!rows.length){host.innerHTML='<p class="mission-empty">No hay misiones activas en esta categoría.</p>';return;}
+    host.innerHTML=rows.map(m=>{
+      const pct=Math.min(100,Math.round((m.progress/m.target)*100));
+      const claimed=!!m.claimed_at,complete=m.progress>=m.target,started=!!m.started_at;
+      const label=claimed?'Reclamada':complete?'Reclamar':started?'Seguir':'Empezar';
+      const disabled=claimed;
+      return '<article class="mission-card mission-live"><div class="mission-card-top"><span class="mission-kicker">'+({daily:'CADA DÍA',weekly:'CADA SEMANA',seasonal:'TEMPORADA'}[m.category])+'</span><span class="mission-difficulty">'+m.difficulty+'</span></div><h3>'+escapeHtml(m.title)+'</h3><p>'+escapeHtml(m.description)+'</p><div class="mission-progress-label"><span>Progreso</span><b>'+m.progress+' / '+m.target+'</b></div><div class="mission-progress-track"><span style="width:'+pct+'%"></span></div><div class="mission-rewards"><b>+'+m.reward_xp+' XP</b><b>+'+m.reward_pf+' PF</b></div><button class="btn '+(complete?'btn-gold':'btn-outline')+' mission-action" data-id="'+m.user_mission_id+'" '+(disabled?'disabled':'')+'>'+label+'</button>'+(claimed?'<small class="mission-claimed">✓ Recompensa acreditada</small>':'')+'</article>';
+    }).join('');
+    host.querySelectorAll('.mission-action').forEach(btn=>btn.addEventListener('click',()=>handleMission(btn.dataset.id,btn)));
+  }
+  function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+  async function handleMission(id,button){
+    if(!await requireLogin())return;
+    const mission=missionCache.find(m=>m.user_mission_id===id);if(!mission)return;
+    button.disabled=true;
+    if(!mission.started_at){
+      const {error}=await client.rpc('start_mission',{p_mission_id:mission.mission_id});
+      if(error){showToast('No se pudo iniciar: '+error.message);button.disabled=false;return;}
+      showToast('Misión activada. El progreso se acredita con resultados verificados.');
+    }else if(mission.progress<mission.target){
+      showToast('Te faltan '+(mission.target-mission.progress)+' para completar esta misión.');
+    }else{
+      const {error}=await client.rpc('claim_mission',{p_user_mission_id:id});
+      if(error){
+        const msg=error.message||'Error al reclamar';
+        showToast(msg.includes('MISSION_INCOMPLETE')?'Te falta progreso para completar esta misión.':msg.includes('MISSION_ALREADY_CLAIMED')?'Esta misión ya fue reclamada.':'No se pudo reclamar: '+msg);
+        button.disabled=false;return;
+      }
+      showToast('¡Recompensa acreditada! Ganaste '+mission.reward_xp+' XP y '+mission.reward_pf+' PF.');
+      await refreshProfile();
+    }
+    await loadMissions();
+  }
+  document.querySelectorAll('[data-mission-tab]').forEach(tab=>tab.addEventListener('click',()=>{
+    missionCategory=tab.dataset.missionTab;
+    document.querySelectorAll('[data-mission-tab]').forEach(t=>t.classList.toggle('active',t===tab));
+    renderMissions();
+  }));
+
   async function loadAccountData(){
     if(!currentUser) return;
-    await Promise.all([refreshProfile(),loadTournaments(),loadFrames(),loadRooms()]);
+    await Promise.all([refreshProfile(),loadTournaments(),loadFrames(),loadRooms(),loadMissions()]);
   }
   client.auth.onAuthStateChange((_event,session)=>{
     sync(session?.user??null);
     if(session?.user) setTimeout(loadAccountData,0);
-    else {loadFrames();loadTournaments();loadRooms();}
+    else {loadFrames();loadTournaments();loadRooms();loadMissions();}
   });
 
-  loadTournaments();loadFrames();loadRooms();
+  loadTournaments();loadFrames();loadRooms();loadMissions();
   window.PLAYFORJA = Object.freeze({supabase:client, getUser:()=>currentUser});
 })();
