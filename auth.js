@@ -87,6 +87,7 @@
     else sync(data.session?.user??null);
   });
 
+  function showToast(text){const el=document.getElementById('toast');if(!el)return;el.textContent=text;el.classList.add('show');window.setTimeout(()=>el.classList.remove('show'),3200);}
   async function requireLogin(){
     if(currentUser) return true;
     show();form.hidden=false;logout.hidden=true;setMode('login');
@@ -120,7 +121,7 @@
         const {data:result,error:joinError}=await client.rpc('join_tournament',{p_tournament_id:item.id});
         if(joinError){notifyError(joinError.message);button.disabled=false;return;}
         button.textContent=result.already_joined?'Ya estás unido':'Te uniste al torneo';
-        notify(result.already_joined?'Ya estabas anotado.':'Te uniste al torneo.');
+        showToast(result.already_joined?'Ya estabas anotado.':'Te uniste al torneo.');
         await loadTournaments();
       };
     }
@@ -149,7 +150,7 @@
         button.disabled=true;
         const {data:result,error:buyError}=await client.rpc('purchase_frame',{p_frame_id:item.id});
         if(buyError){notifyError(buyError.message);button.disabled=false;return;}
-        notify(result.already_owned?'Ese marco ya es tuyo.':'Marco desbloqueado.');
+        showToast(result.already_owned?'Ese marco ya es tuyo.':'Marco desbloqueado.');
         await refreshProfile();await loadFrames();
       };
     }
@@ -172,7 +173,7 @@
         button.disabled=true;
         const {data:result,error:joinError}=await client.rpc('join_room',{p_room_id:item.id});
         if(joinError){notifyError(joinError.message);button.disabled=false;return;}
-        notify(result.already_joined?'Ya estás en esta sala.':'Te uniste a la sala.');
+        showToast(result.already_joined?'Ya estás en esta sala.':'Te uniste a la sala.');
         await loadRooms();
       };
     }
@@ -187,5 +188,6 @@
     else {loadFrames();loadTournaments();loadRooms();}
   });
 
+  loadTournaments();loadFrames();loadRooms();
   window.PLAYFORJA = Object.freeze({supabase:client, getUser:()=>currentUser});
 })();
