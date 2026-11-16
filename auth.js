@@ -87,6 +87,10 @@
     else sync(data.session?.user??null);
   });
 
+  document.querySelectorAll('[data-platform-filter]').forEach(filter=>filter.addEventListener('click',()=>{
+    document.querySelectorAll('[data-platform-filter]').forEach(el=>el.classList.toggle('active',el===filter));
+    document.querySelectorAll('.game-card').forEach(card=>card.hidden=filter.dataset.platformFilter!=='Todos'&&card.dataset.platform!==filter.dataset.platformFilter);
+  }));
   function showToast(text){const el=document.getElementById('toast');if(!el)return;el.textContent=text;el.classList.add('show');window.setTimeout(()=>el.classList.remove('show'),3200);}
   async function requireLogin(){
     if(currentUser) return true;
@@ -99,6 +103,12 @@
     const {data,error}=await client.from('profiles').select('pf_balance,xp,username').eq('id',currentUser.id).single();
     if(error){console.warn('No se pudo cargar el perfil:',error.message);return;}
     document.querySelectorAll('.balance strong').forEach(el=>el.textContent=Number(data.pf_balance).toLocaleString('es-AR')+' PF');
+    const xp=Number(data.xp)||0,levels=[['BRONCE',0],['PLATA',500],['ORO',1200],['PLATINO',1750],['DIAMANTE',2500],['LEYENDA',3500]];
+    let rank=0;for(let i=0;i<levels.length;i++)if(xp>=levels[i][1])rank=i;
+    const next=levels[Math.min(rank+1,levels.length-1)],base=levels[rank][1],pct=rank===levels.length-1?100:Math.max(0,Math.min(100,Math.round((xp-base)/(next[1]-base)*100)));
+    const rankTitle=document.querySelector('.rank-top h3'),rankPct=document.querySelector('.rank-top>strong'),rankBar=document.querySelector('.progress-track span');
+    if(rankTitle)rankTitle.textContent=levels[rank][0]+' → '+next[0];if(rankPct)rankPct.innerHTML=pct+'<small>%</small>';if(rankBar)rankBar.style.width=pct+'%';
+    document.querySelectorAll('.rank-labels span').forEach((el,i)=>el.classList.toggle('current',i===rank));
     const credits=document.querySelector('.credits-line');
     if(credits) credits.innerHTML='<span>MONEDAS PF <strong>'+Number(data.pf_balance).toLocaleString('es-AR')+'</strong></span><span>XP <strong>'+Number(data.xp).toLocaleString('es-AR')+'</strong></span>';
   }
@@ -109,6 +119,7 @@
     const cards=[...document.querySelectorAll('.game-card')];
     for(let i=0;i<Math.min(cards.length,data.length);i++){
       const item=data[i],card=cards[i],button=card.querySelector('.join-btn');
+      card.dataset.platform=item.platform;
       const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registered||0;
       card.querySelector('h3').textContent=item.title;
       card.querySelector('.pill').textContent=item.platform+' · '+item.mode;
