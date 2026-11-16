@@ -99,11 +99,12 @@
     <section class="section section-dark" id="misiones"><div class="section-wrap">
       <div class="section-heading"><div><div class="eyebrow">GANATE CADA ASCENSO</div><h2>PROGRESIÓN <em>QUE NO SE REGALA</em></h2></div><span class="section-index">03 / SUPERATE</span></div>
       <div class="rank-panel"><div class="rank-top"><div><span class="eyebrow">TU CAMINO</span><h3>ORO <span>→</span> PLATINO</h3></div><strong>68<small>%</small></strong></div><div class="progress-track"><span style="width:68%"></span></div><div class="rank-labels"><span>BRONCE</span><span>PLATA</span><span class="current">ORO</span><span>PLATINO</span><span>DIAMANTE</span><span>LEYENDA</span></div></div>
-      <div class="mission-grid">
-        <article class="mission-card"><span class="mission-kicker">CADA DÍA</span><h3>MISIONES DIARIAS</h3><ul><li><span>Completá 2 partidas</span><b>+150 EXP</b></li><li><span>Jugá con tu equipo</span><b>+200 EXP</b></li><li><span>Conseguí 1 victoria</span><b>+250 EXP</b></li></ul></article>
-        <article class="mission-card"><span class="mission-kicker">CADA SEMANA</span><h3>MISIONES SEMANALES</h3><ul><li><span>Ganá 5 partidas</span><b>+700 EXP</b></li><li><span>Jugá 10 encuentros</span><b>+500 EXP</b></li><li><span>Alcanzá el Top 3</span><b>+900 EXP</b></li></ul></article>
-        <article class="mission-card"><span class="mission-kicker">CICLO ACTUAL</span><h3>MISIONES DE TEMPORADA</h3><ul><li><span>Completá 30 partidas</span><b>+1.500 EXP</b></li><li><span>Subí una división</span><b>+2.000 EXP</b></li><li><span>Superá 3 desafíos</span><b>+1.200 EXP</b></li></ul></article>
+      <div class="mission-tabs" role="tablist" aria-label="Tipos de misiones">
+        <button class="mission-tab active" type="button" data-mission-tab="daily">Diarias</button>
+        <button class="mission-tab" type="button" data-mission-tab="weekly">Semanales</button>
+        <button class="mission-tab" type="button" data-mission-tab="seasonal">De temporada</button>
       </div>
+      <div id="mission-list" class="mission-grid" aria-live="polite"><p class="mission-empty">Iniciá sesión para cargar tus misiones y progreso guardado.</p></div>
       <p class="manifesto">DIFÍCIL PERO JUSTO. <em>NO ES FÁCIL. NO ES IMPOSIBLE.</em></p>
     </div></section>
 
