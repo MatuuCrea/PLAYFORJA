@@ -139,7 +139,6 @@
         await loadTournaments();
       };
     }
-  }
     const userTournaments=data.filter(item=>item.slug.startsWith('user-'));
     const dynamicHost=document.getElementById('community-tournaments');
     if(dynamicHost){
@@ -156,6 +155,7 @@
         await loadTournaments();
       }));
     }
+  }
   function notifyError(message){showToast(message.includes('TOURNAMENT_FULL')?'Torneo lleno.':message.includes('INSUFFICIENT_PF')?'No te alcanza el saldo de Monedas PF.':'No se pudo completar la acción: '+message);}
   async function loadFrames(){
     const {data,error}=await client.from('frames').select('*').eq('active',true).order('price_pf');
