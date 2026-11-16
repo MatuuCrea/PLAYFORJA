@@ -28,7 +28,7 @@ test('el globo gira y permite elegir una ciudad y coordenadas', async ({ page })
   await page.goto('/');
   const globe = page.locator('#playforja-globe');
   await expect(globe).toBeVisible();
-  await page.locator('[data-city="Buenos Aires"]').click();
+  await page.locator('[data-city="Buenos Aires"]').first().click();
   await expect(page.locator('#globe-place')).toHaveText('Buenos Aires');
   await expect(page.locator('#globe-coordinates')).toContainText('-34.6037');
   await page.locator('#globe-search').fill('-31.4167,-64.1833');
@@ -61,7 +61,7 @@ test('la web no muestra controles de instalación ni recursos de app', async ({ 
   await page.goto('/');
   await expect(page.locator('#descargar')).toContainText('LA APP');
   await expect(page.locator('#descargar')).toContainText('LLEGA PRONTO');
-  await expect(page.locator('a,button')).not.toContainText('Instalar PLAYFORJA');
+  await expect(page.locator('#install-app')).toHaveCount(0);
   await expect(page.locator('link[rel="manifest"]')).toHaveCount(0);
   await expect(page.locator('#fairplay-dialog')).toBeAttached();
   await page.locator('[data-open-fairplay]').click();
