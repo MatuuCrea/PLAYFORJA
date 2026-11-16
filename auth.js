@@ -105,10 +105,13 @@
     document.querySelectorAll('.balance strong').forEach(el=>el.textContent=Number(data.pf_balance).toLocaleString('es-AR')+' PF');
     const xp=Number(data.xp)||0,levels=[['BRONCE',0],['PLATA',500],['ORO',1200],['PLATINO',1750],['DIAMANTE',2500],['LEYENDA',3500]];
     let rank=0;for(let i=0;i<levels.length;i++)if(xp>=levels[i][1])rank=i;
-    const next=levels[Math.min(rank+1,levels.length-1)],base=levels[rank][1],pct=rank===levels.length-1?100:Math.max(0,Math.min(100,Math.round((xp-base)/(next[1]-base)*100)));
+    const next=levels[Math.min(rank+1,levels.length-1)],pct=rank===levels.length-1?100:Math.max(0,Math.min(100,Math.round(xp/next[1]*100)));
     const rankTitle=document.querySelector('.rank-top h3'),rankPct=document.querySelector('.rank-top>strong'),rankBar=document.querySelector('.progress-track span');
     if(rankTitle)rankTitle.textContent=levels[rank][0]+' → '+next[0];if(rankPct)rankPct.innerHTML=pct+'<small>%</small>';if(rankBar)rankBar.style.width=pct+'%';
     document.querySelectorAll('.rank-labels span').forEach((el,i)=>el.classList.toggle('current',i===rank));
+    document.querySelectorAll('.rank-badges span').forEach((el,i)=>el.classList.toggle('current',i===rank));
+    const progressNumber=document.querySelector('.progress-number');
+    if(progressNumber)progressNumber.textContent=Number(xp).toLocaleString('es-AR')+' de '+Number(next[1]).toLocaleString('es-AR')+' XP · '+pct+'%';
     const credits=document.querySelector('.credits-line');
     if(credits) credits.innerHTML='<span>MONEDAS PF <strong>'+Number(data.pf_balance).toLocaleString('es-AR')+'</strong></span><span>XP <strong>'+Number(data.xp).toLocaleString('es-AR')+'</strong></span>';
   }
@@ -143,6 +146,8 @@
     }
     const userTournaments=data.filter(item=>item.slug.startsWith('user-'));
     const dynamicHost=document.getElementById('community-tournaments');
+    const activeFilter=document.querySelector('[data-platform-filter].active')?.dataset.platformFilter;
+    if(activeFilter) document.querySelectorAll('.game-card').forEach(card=>{card.hidden=card.dataset.platform!==activeFilter;});
     if(dynamicHost){
       dynamicHost.innerHTML=userTournaments.map(item=>{
         const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registered||0;
@@ -170,20 +175,24 @@
     const frameCardClass={'marco-leyenda':'frame-legend','marco-fuego':'frame-fire','marco-oro':'frame-gold','marco-diamante':'frame-diamond'};
     for(const item of (data||[])){
       const preview=document.querySelector('.'+frameCardClass[item.slug]);
-      const card=preview?.closest('.frame-card');if(!card)continue;
-      const button=card.querySelector('.buy-btn');
-      card.querySelector('h3').textContent=item.name;
-      card.querySelector('b').textContent=Number(item.price_pf).toLocaleString('es-AR')+' PF';
-      button.textContent=owned.has(item.id)?'Desbloqueado':'CANJEAR';
-      button.disabled=owned.has(item.id);
-      button.onclick=async()=>{
-        if(!await requireLogin()) return;
-        button.disabled=true;
-        const {data:result,error:buyError}=await client.rpc('purchase_frame',{p_frame_id:item.id});
-        if(buyError){notifyError(buyError.message);button.disabled=false;return;}
-        showToast(result.already_owned?'Ese marco ya es tuyo.':'Marco desbloqueado.');
-        await refreshProfile();await loadFrames();
-      };
+      const card=preview?.closest('.frame-card');
+      if(card){
+        card.querySelector('h3').textContent=item.name;
+        const price=card.querySelector('b');if(price)price.textContent=Number(item.price_pf).toLocaleString('es-AR')+' PF';
+      }
+      const buttons=[...document.querySelectorAll('.buy-btn')].filter(button=>button.dataset.frame===item.name);
+      for(const button of buttons){
+        button.textContent=owned.has(item.id)?'Desbloqueado':'CANJEAR';
+        button.disabled=owned.has(item.id);
+        button.onclick=async()=>{
+          if(!await requireLogin()) return;
+          button.disabled=true;
+          const {data:result,error:buyError}=await client.rpc('purchase_frame',{p_frame_id:item.id});
+          if(buyError){notifyError(buyError.message);button.disabled=false;return;}
+          showToast(result.already_owned?'Ese marco ya es tuyo.':'Marco desbloqueado.');
+          await refreshProfile();await loadFrames();
+        };
+      }
     }
   }
   async function loadRooms(){
