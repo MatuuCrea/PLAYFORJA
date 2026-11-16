@@ -6,13 +6,15 @@
   "scripts": {
     "build:web": "node scripts/build-web.mjs",
     "android:add": "cap add android",
-    "android:sync": "npm run build:web && cap sync android"
+    "android:sync": "npm run build:web && cap sync android",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@capacitor/android": "8.6.2",
     "@capacitor/core": "8.6.2"
   },
   "devDependencies": {
-    "@capacitor/cli": "8.6.2"
+    "@capacitor/cli": "8.6.2",
+    "@playwright/test": "1.56.1"
   }
 }
