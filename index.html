@@ -20,8 +20,8 @@
   <header class="site-header">
     <a class="brand" href="#inicio" aria-label="PLAYFORJA, inicio">
       <svg class="brand-mark" viewBox="0 0 100 100" role="img" aria-label="Yunque, corona y fuego">
-        <path d="M50 5 C37 21 45 26 34 37 C27 45 30 53 38 57 C35 45 48 42 48 32 C61 43 67 51 59 62 C78 54 79 34 64 20 C65 34 57 36 57 42 C58 26 52 17 50 5Z" fill="#ef6a22"/>
-        <path d="M25 25 L34 12 L50 20 L66 12 L75 25 L69 34 L31 34Z" fill="#f2c45d" stroke="#8f6422" stroke-width="2"/>
+        <path d="M24 63 C10 47 26 34 34 24 C33 39 42 43 43 54 C49 43 49 30 50 17 C64 34 69 47 59 63Z" fill="#FF6B00"/><path d="M43 66 C35 53 47 46 50 36 C61 50 65 58 57 68Z" fill="#FFD45A"/><path d="M61 64 C56 53 68 44 72 35 C79 51 76 60 68 68Z" fill="#FF6B00"/>
+        <path d="M22 28 L30 12 L40 23 L50 8 L60 23 L70 12 L78 28 L70 37 H30Z" fill="#D4AF37" stroke="#8f6422" stroke-width="2"/>
         <path d="M23 48 H77 L70 61 H58 L58 69 H76 L81 79 H19 L24 69 H42 V61 H30Z" fill="#d9a83f" stroke="#80571d" stroke-width="2" stroke-linejoin="round"/>
         <path d="M36 82 H64 L70 89 H30Z" fill="#9c6c28"/>
       </svg>
@@ -31,7 +31,7 @@
     <nav class="main-nav" aria-label="Navegación principal">
       <a href="#inicio">Inicio</a><a href="#torneos">Torneos</a><a href="#salas">Salas</a>
       <a href="#misiones">Misiones</a><a href="#marcos">Marcos</a><a href="#temporadas">Temporadas</a>
-      <a href="#streaming">Streaming</a><a href="#idiomas">Idiomas</a><a href="#evidencia">Evidencia</a><a href="#mapa">Mapa Mundial</a>
+      <a href="#streaming">Streaming</a><a href="#idiomas">Idiomas</a><a href="#evidencia">Evidencia</a>
       <a class="nav-download" href="#descargar">La App llega pronto</a>
     </nav>
   </header>
@@ -43,7 +43,7 @@
         <h1>PLAY<span>FORJA</span></h1>
         <h2 class="hero-slogan">Forjá tu leyenda</h2>
         <p class="hero-lead">Tu habilidad. Tu equipo. Tu historia. Entrá a la arena y conquistá tu lugar.</p>
-        <a class="btn btn-gold" href="#descargar">La App llega pronto</a>
+        <button class="btn btn-gold hero-app-button" type="button" data-open-app>Descargar App</button>
         <button class="fair-play" type="button" data-open-fairplay><span class="fair-shield">⬟</span><span><b>SIN PLATA REAL</b><small>Solo Monedas PF y XP</small></span><span class="info-mark">i</span></button>
         <div class="hero-stats"><div><strong>PF + XP</strong><small>Economía interna</small></div><div><strong>FAIR PLAY</strong><small>Competencia justa</small></div></div>
       </section>
@@ -159,6 +159,7 @@
 
   <footer class="site-footer"><div class="footer-brand"><strong>PLAYFORJA</strong><span>FORJÁ TU LEYENDA</span></div><div class="footer-meta"><a href="./terminos.html">Políticas</a><a href="./soporte.html">Soporte</a><a href="./soporte.html">Contacto</a><a href="https://github.com/MatuuCrea/PLAYFORJA" target="_blank" rel="noopener">Código abierto en GitHub ↗</a></div><small>© <span id="year">2025</span> PLAYFORJA · GitHub Pages · Sin apuestas ni dinero real.</small></footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog class="fairplay-dialog" id="app-coming-soon"><button class="evidence-close" type="button" data-close-app aria-label="Cerrar">×</button><span class="eyebrow">PLAYFORJA</span><h2>LA APP LLEGA PRONTO</h2><p>La experiencia actual de PLAYFORJA funciona como página web. La aplicación oficial todavía no está disponible y no se iniciará ninguna descarga.</p></dialog>
   <dialog class="fairplay-dialog" id="fairplay-dialog"><button class="evidence-close" type="button" data-close-fairplay aria-label="Cerrar">×</button><span class="eyebrow">JUEGO JUSTO</span><h2>SIN PLATA REAL</h2><p>PLAYFORJA utiliza únicamente Monedas PF y XP como puntos internos de progresión. No son dinero, no se compran con apuestas y no tienen valor de retiro.</p></dialog>
 </body>
 </html>
