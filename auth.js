@@ -84,7 +84,7 @@
   client.auth.onAuthStateChange((_event,session)=>sync(session?.user??null));
   client.auth.getSession().then(({data,error})=>{
     if(error) message('No se pudo recuperar la sesión: '+error.message,true);
-    else sync(data.session?.user??null);
+    else {sync(data.session?.user??null);if(data.session?.user)setTimeout(loadAccountData,0);}
   });
 
   document.querySelectorAll('[data-platform-filter]').forEach(filter=>filter.addEventListener('click',()=>{
