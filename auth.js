@@ -116,6 +116,7 @@
     const {data,error}=await client.from('tournaments').select('*').order('created_at');
     if(error){console.warn('Torneos:',error.message);return;}
     const {data:counts}=await client.rpc('get_tournament_counts');
+    let joinedIds=new Set();if(currentUser){const {data:joined}=await client.from('tournament_registrations').select('tournament_id').eq('user_id',currentUser.id);(joined||[]).forEach(row=>joinedIds.add(row.tournament_id));}
     const cards=[...document.querySelectorAll('.game-card')];
     for(let i=0;i<Math.min(cards.length,data.length);i++){
       const item=data[i],card=cards[i],button=card.querySelector('.join-btn');
@@ -124,8 +125,8 @@
       card.querySelector('h3').textContent=item.title;
       card.querySelector('.pill').textContent=item.platform+' · '+item.mode;
       card.querySelector('.card-meta b').textContent=(count||0)+' de '+item.capacity+' anotados';
-      button.disabled=item.status!=='open' && item.status!=='full';
-      button.textContent=item.status==='full'?'Torneo lleno':'UNIRSE';
+      button.disabled=item.status!=='open'||joinedIds.has(item.id);
+      button.textContent=joinedIds.has(item.id)?'Ya estás unido':item.status==='full'?'Torneo lleno':'UNIRSE';
       button.dataset.tournamentId=item.id;
       button.onclick=async()=>{
         if(!await requireLogin()) return;
@@ -138,10 +139,7 @@
       };
     }
   }
-  function notifyError(message){
-    const toast=document.getElementById('toast');
-    if(toast){toast.textContent=message.includes('TOURNAMENT_FULL')?'Torneo lleno.':message.includes('INSUFFICIENT_PF')?'No te alcanza el saldo de Monedas PF.':'No se pudo completar la acción: '+message;toast.classList.add('show');}
-  }
+  function notifyError(message){showToast(message.includes('TOURNAMENT_FULL')?'Torneo lleno.':message.includes('INSUFFICIENT_PF')?'No te alcanza el saldo de Monedas PF.':'No se pudo completar la acción: '+message);}
   async function loadFrames(){
     const {data,error}=await client.from('frames').select('*').eq('active',true).order('price_pf');
     if(error){console.warn('Marcos:',error.message);return;}
@@ -171,6 +169,7 @@
     const {data,error}=await client.from('rooms').select('*').order('created_at');
     if(error){console.warn('Salas:',error.message);return;}
     const {data:counts}=await client.rpc('get_room_counts');
+    let joinedRooms=new Set();if(currentUser){const {data:joined}=await client.from('room_members').select('room_id').eq('user_id',currentUser.id);(joined||[]).forEach(row=>joinedRooms.add(row.room_id));}
     const cards=[...document.querySelectorAll('.room-card')];
     for(let i=0;i<Math.min(cards.length,data.length);i++){
       const item=data[i],card=cards[i],button=card.querySelector('.join-btn');
@@ -179,8 +178,8 @@
       card.querySelector('p').textContent=item.description;
       const count=(counts||[]).find(row=>row.room_id===item.id)?.members||0;
       card.querySelector('small').textContent=(count||0)+' de '+item.capacity+' jugadores';
-      button.textContent=item.status==='full'?'Sala llena':'Unirse';
-      button.disabled=item.status!=='open';
+      button.textContent=joinedRooms.has(item.id)?'Ya estás en la sala':item.status==='full'?'Sala llena':'Unirse';
+      button.disabled=item.status!=='open'||joinedRooms.has(item.id);
       button.onclick=async()=>{
         if(!await requireLogin()) return;
         button.disabled=true;
