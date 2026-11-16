@@ -181,6 +181,9 @@
         card.querySelector('h3').textContent=item.name;
         const price=card.querySelector('b');if(price)price.textContent=Number(item.price_pf).toLocaleString('es-AR')+' PF';
       }
+      document.querySelectorAll('.mini-frame').forEach(mini=>{
+        if(mini.querySelector('[data-frame="'+item.name+'"]')) mini.querySelector('small').textContent=Number(item.price_pf).toLocaleString('es-AR')+' PF';
+      });
       const buttons=[...document.querySelectorAll('.buy-btn')].filter(button=>button.dataset.frame===item.name);
       for(const button of buttons){
         button.textContent=owned.has(item.id)?'Desbloqueado':'CANJEAR';
