@@ -78,3 +78,20 @@ Tipos aceptados: `win`, `elimination`, `team_minute`, `room_game`, `tournament_j
 - El APK de depuración sirve para instalación y pruebas internas; no es una versión firmada de producción ni una publicación en Play Store. La firma de release requiere un keystore privado que no debe guardarse en el repositorio.
 
 - La política de inserción de evidencias solo permite crear registros propios con `validated = false`; la validación queda reservada a una operación administrativa confiable.
+
+## Datos reales, muestras y límites actuales
+
+- Los torneos y salas sembrados en la base están marcados con `is_demo = true` y la interfaz los identifica como muestras. Los contadores muestran inscripciones/membresías reales en la base (inicialmente cero), no espectadores ni participantes inventados.
+- Los marcos y sus precios se cargan desde el catálogo de Supabase y se muestran en PF. Las cifras de XP/PF y rangos del perfil proceden del perfil autenticado.
+- La galería solo lista evidencias con `validated = true`. No se crean capturas de ejemplo para aparentar actividad.
+- Las temporadas registradas son históricas (Forja Inicial y Llama Eterna); no se declara una temporada activa cuando no existe en la base.
+- El globo mundial es una visualización interactiva de referencia: arrastre, zoom, selección de coordenadas y ciudades predefinidas. No representa centros de datos, ping ni partidas regionales.
+- Streaming permanece en estado **Próximamente** hasta conectar un proveedor autorizado.
+- Las misiones se renuevan usando la fecha y semana de Argentina. Los ciclos de temporada se identifican por la temporada activa; mientras no exista una activa, se muestran como pretemporada de prueba.
+- Los eventos de partidas deben llegar desde un backend confiable. La Edge Function acepta `win`, `elimination`, `team_minute`, `room_game`, `night_game`, `tournament_top3`, `rank_up`, `match_complete`, `friend_invite` y `win_no_deaths`. El token service-role solo se configura en el backend de juego, nunca en el navegador.
+
+## Pruebas de navegador
+
+El workflow `PLAYFORJA browser E2E` ejecuta Chromium contra la página local y comprueba carga de datos de muestra, filtros, formulario de acceso y globo interactivo. El caso de inicio de sesión se ejecuta únicamente si existen los secretos de GitHub `PLAYFORJA_E2E_EMAIL` y `PLAYFORJA_E2E_PASSWORD`, correspondientes a una cuenta E2E dedicada. No se deben usar credenciales personales ni una cuenta de producción. Las pruebas de inscripción/compra/reclamo con cuenta real todavía requieren esa cuenta aislada y pruebas controladas.
+
+La auditoría Supabase mantiene avisos sobre funciones `SECURITY DEFINER` expuestas por RPC. Son operaciones transaccionales que verifican `auth.uid()` y se necesitan para mantener PF/XP y cupos atómicos; el aviso no equivale por sí solo a una explotación, pero requiere revisión específica de cada función. La tabla de eventos verificados no tiene políticas para clientes; solo la ruta de servicio confiable la utiliza.
