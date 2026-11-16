@@ -48,4 +48,30 @@
     document.getElementById('hello-text').textContent = greetings[button.dataset.lang] || greetings.es;
     notify('Idioma de bienvenida: ' + button.textContent.trim());
   }));
+
+  // Installable PWA on supported browsers; this does not claim to be a native APK.
+  const installButton = document.getElementById('install-app');
+  let installPrompt = null;
+  window.addEventListener('beforeinstallprompt', event => {
+    event.preventDefault();
+    installPrompt = event;
+    if (installButton) installButton.hidden = false;
+  });
+  installButton?.addEventListener('click', async () => {
+    if (!installPrompt) {
+      notify('Si tu navegador permite instalarla, abrí su menú y elegí “Instalar aplicación”.');
+      return;
+    }
+    installPrompt.prompt();
+    const choice = await installPrompt.userChoice;
+    if (choice?.outcome === 'accepted') notify('PLAYFORJA se está instalando.');
+    installPrompt = null;
+    installButton.hidden = true;
+  });
+  window.addEventListener('appinstalled', () => notify('PLAYFORJA quedó instalada en este dispositivo.'));
+  if ('serviceWorker' in navigator && window.isSecureContext) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(error => console.warn('PWA offline no disponible:', error));
+    });
+  }
 })();
