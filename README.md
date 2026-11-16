@@ -49,3 +49,22 @@ Tipos aceptados: `win`, `elimination`, `team_minute`, `room_game`, `tournament_j
 4. GitHub Pages sirve archivos estáticos: las operaciones de datos están protegidas por Auth/RLS, pero una página estática no puede ocultar sus propios archivos ni implementar protección SSR de rutas. Las vistas privadas deben seguir comprobando la sesión y los datos sensibles siempre deben pasar por RLS/funciones de servidor.
 5. No hay todavía un APK/instalador ni un enlace de descarga real configurado. No mostrar una descarga ficticia.
 
+
+
+## Aplicación instalable (PWA)
+
+- Manifiesto web, icono SVG y service worker para cachear el shell estático.
+- En navegadores compatibles y bajo HTTPS, Android y desktop pueden ofrecer Instalar PLAYFORJA.
+- La PWA no es un APK nativo: las funciones que requieren Supabase necesitan conexión. No se declara soporte offline para cuentas, compras, torneos o misiones.
+- El catálogo de GitHub Releases sigue disponible, pero todavía no hay un APK/instalador publicado.
+
+## Seguridad adicional
+
+- Se retiró el permiso SQL de UPDATE sobre profiles para anon y authenticated. El saldo PF y XP solo se modifican mediante operaciones de servidor autorizadas.
+- Los contadores públicos de torneos/salas son agregados de solo lectura. Las funciones transaccionales requieren sesión y validan al usuario.
+- Los eventos de juego siguen reservados al backend confiable; la clave de servicio nunca se expone al navegador.
+
+## Calidad y documentos
+
+- GitHub Actions valida sintaxis JavaScript, JSON del manifiesto y puntos esenciales de la PWA.
+- Se agregaron páginas iniciales de privacidad, términos y soporte. Son borradores: antes del lanzamiento público deben completarse datos del responsable, contacto privado, retención y revisión legal.
