@@ -124,7 +124,8 @@
     const seeded=data.filter(item=>!item.slug.startsWith('user-'));
     for(let i=0;i<Math.min(cards.length,seeded.length);i++){
       const item=seeded[i],card=cards[i],button=card.querySelector('.join-btn');
-      card.dataset.platform=item.platform;
+      const rawPlatform=String(item.platform||'').toLocaleLowerCase('es');
+      card.dataset.platform=rawPlatform.includes('pc')?'PC':rawPlatform.includes('tablet')?'Tablet':rawPlatform.includes('mov')||rawPlatform.includes('mobile')?'Móvil':item.platform;
       const count=(counts||[]).find(row=>row.tournament_id===item.id)?.registration_count||0;
       card.querySelector('h3').textContent=item.title;
       card.querySelector('.pill').textContent=(item.is_demo?'MUESTRA · ':'')+item.platform+' · '+item.mode;
@@ -248,6 +249,19 @@
       card.querySelector('h3').textContent=season.name;
       const dates=[season.starts_at,season.ends_at].filter(Boolean).map(value=>new Date(value).toLocaleDateString('es-AR'));
       card.querySelector('ul').innerHTML='<li>'+ (dates.length===2?'Desde '+dates[0]+' hasta '+dates[1]:'Fechas por anunciar')+'</li><li>Estado: '+(season.status==='finished'?'Finalizada':season.status==='active'?'En curso':'Próximamente')+'</li><li>Recompensa: consultar catálogo de marcos</li>';
+      const action=card.querySelector('.season-action');
+      if(action){
+        action.disabled=false;
+        action.textContent=season.status==='finished'?'Completada':season.status==='active'?'En curso':'Próximamente';
+        action.onclick=()=>{
+          let dialog=document.getElementById('season-details');
+          if(!dialog){dialog=document.createElement('dialog');dialog.id='season-details';dialog.className='fairplay-dialog';document.body.appendChild(dialog);}
+          dialog.innerHTML='<button type="button" class="evidence-close" aria-label="Cerrar">×</button><span class="eyebrow">DETALLE DE TEMPORADA</span><h2>'+escapeHtml(season.name)+'</h2><p>Estado: '+escapeHtml(season.status==='finished'?'Finalizada':season.status==='active'?'En curso':'Próximamente')+'</p><p>'+(dates.length===2?'Desde '+dates[0]+' hasta '+dates[1]:'Fechas por anunciar')+'</p><p>Las recompensas disponibles se consultan en el catálogo real de PLAYFORJA.</p><a class="btn btn-gold" href="#misiones">Ver misiones</a>';
+          dialog.querySelector('.evidence-close').onclick=()=>dialog.close();
+          dialog.querySelector('a').addEventListener('click',()=>dialog.close());
+          dialog.showModal();
+        };
+      }
     }
   }
   async function loadEvidence(){
