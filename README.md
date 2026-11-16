@@ -69,7 +69,9 @@ Tipos aceptados: `win`, `elimination`, `team_minute`, `room_game`, `tournament_j
 - GitHub Actions valida sintaxis JavaScript y comprueba que el repositorio siga siendo exclusivamente web.
 - Se agregaron páginas iniciales de privacidad, términos y soporte. Son borradores: antes del lanzamiento público deben completarse datos del responsable, contacto privado, retención y revisión legal.
 
-- Migraciones aplicadas y versionadas para las correcciones recientes: `20261116182546_lock_profile_economy_fields` y `20261116182900_use_current_jwt_role_claim_for_game_events`.
+- Las migraciones recientes de seguridad están guardadas en `supabase/migrations/`.
+
+> **Importante — historial de migraciones pendiente de reconciliar:** la base Supabase conectada registra 16 migraciones aplicadas, mientras que este repositorio contiene solo 9 archivos SQL. Faltan los 7 archivos iniciales de la fundación y 6 archivos posteriores tienen timestamps distintos de los registrados en la base remota. La base actual está activa y sus cambios ya están aplicados, pero **no ejecutar `supabase db push`, `supabase db reset --linked` ni reaplicar manualmente esta carpeta** hasta recuperar el baseline y reconciliar el historial. Hacerlo ahora podría repetir DDL y fallar. Antes de abrir un entorno nuevo, exportar/reconstruir el esquema remoto, revisar el SQL generado y validar la cadena completa en una base de prueba.
 
 - La política de inserción de evidencias solo permite crear registros propios con `validated = false`; la validación queda reservada a una operación administrativa confiable.
 
