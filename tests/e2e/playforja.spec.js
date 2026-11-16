@@ -66,7 +66,7 @@ test('la web no muestra controles de instalación ni recursos de app', async ({ 
   await expect(page.locator('#fairplay-dialog')).toBeAttached();
   await page.locator('[data-open-fairplay]').click();
   await expect(page.locator('#fairplay-dialog')).toBeVisible();
-  await expect(page.locator('#fairplay-dialog')).toContainText('Sin plata real');
+  await expect(page.locator('#fairplay-dialog')).toContainText('SIN PLATA REAL');
 });
 
 test('el plano mantiene las secciones y el orden de navegación solicitados', async ({ page }) => {
