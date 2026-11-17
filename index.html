@@ -1,149 +1,634 @@
 <!doctype html>
 <html lang="es-AR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080808">
-  <meta name="description" content="PLAYFORJA: torneos, salas, misiones y progresión competitiva. Forjá tu leyenda.">
-  <title>PLAYFORJA — Forjá tu leyenda</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PLAYFORJA - Forjá tu leyenda</title>
+<style>
+:root{
+  --bg:#0a0a0a; --panel:#141210; --panel2:#1b1712; --gold:#d9a441; --gold2:#f5d47a;
+  --txt:#e8e2d5; --dim:#9a917f; --fire:#ff7a1a; --green:#8bc34a; --red:#e05545;
+  --border:#3a2f1c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+a{color:var(--gold2);text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+
+/* NAV */
+header{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(6px)}
+.nav{display:flex;align-items:center;gap:18px;padding:10px 16px;flex-wrap:wrap;max-width:1280px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.25rem;letter-spacing:2px;color:var(--gold2);cursor:pointer}
+.logo svg{width:30px;height:30px}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto;align-items:center}
+.nav-links button{background:none;color:var(--dim);padding:8px 12px;border-radius:8px;font-size:.9rem;font-weight:600}
+.nav-links button:hover{color:var(--gold2)}
+.nav-links button.active{color:var(--gold2);border-bottom:2px solid var(--gold)}
+.btn-gold{background:linear-gradient(180deg,#f0c869,#c8922e);color:#1a1206;font-weight:700;padding:8px 16px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.btn-gold:hover{filter:brightness(1.1)}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold2);padding:8px 16px;border-radius:8px;font-weight:700}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;padding:36px 0;align-items:center}
+.hero h1{font-size:3.4rem;font-weight:900;letter-spacing:3px;background:linear-gradient(180deg,#ffe9b0,#c8922e);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.hero .tag{color:var(--gold2);font-style:italic;font-size:1.4rem;margin:8px 0 20px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.hero-art{display:flex;justify-content:center}
+.shield{width:220px;height:220px;filter:drop-shadow(0 0 30px rgba(255,122,26,.35));animation:flick 3s infinite alternate}
+@keyframes flick{from{filter:drop-shadow(0 0 18px rgba(255,122,26,.25))}to{filter:drop-shadow(0 0 34px rgba(255,122,26,.5))}}
+
+/* SECTIONS */
+section{padding:26px 0}
+h2.sec{color:var(--gold2);font-size:1.5rem;margin-bottom:4px;text-align:center}
+p.sub{color:var(--dim);text-align:center;margin-bottom:18px;font-size:.95rem}
+.tabs{display:flex;gap:8px;justify-content:center;margin-bottom:18px;flex-wrap:wrap}
+.tabs button{background:var(--panel);color:var(--dim);padding:8px 18px;border-radius:8px;font-weight:700}
+.tabs button.active{background:linear-gradient(180deg,#f0c869,#c8922e);color:#1a1206}
+.grid{display:grid;gap:14px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--border);border-radius:12px;padding:14px;transition:.2s}
+.card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.card h3{color:var(--gold2);font-size:1.05rem;margin-bottom:6px}
+.card .meta{color:var(--dim);font-size:.82rem;line-height:1.5}
+.badge{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px}
+.b-movil{background:#2a3a1a;color:#a7d34a}.b-pc{background:#1a2a3a;color:#5aa7d3}
+.btn-sm{background:linear-gradient(180deg,#f0c869,#c8922e);color:#1a1206;font-weight:800;font-size:.78rem;padding:6px 14px;border-radius:6px;margin-top:8px}
+.btn-sm:disabled{background:#3a3325;color:#8a7f66;cursor:default}
+.joinrow{display:flex;justify-content:space-between;align-items:flex-end}
+.slots{color:var(--dim);font-size:.8rem;margin-top:6px}
+
+/* RANKS */
+.ranks{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px 0}
+.rank{text-align:center;cursor:pointer;padding:10px 14px;border-radius:10px;border:1px solid transparent}
+.rank.sel{border-color:var(--gold);background:var(--panel2)}
+.rank svg{width:52px;height:52px}
+.rank .nm{font-size:.8rem;font-weight:700;margin-top:4px}
+.progressbar{background:#241d10;border:1px solid var(--border);border-radius:99px;height:16px;overflow:hidden;max-width:640px;margin:10px auto}
+.progressbar>div{height:100%;background:linear-gradient(90deg,#c8922e,#ffe9b0);transition:width .5s}
+.mission{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed var(--border)}
+.mission:last-child{border:none}
+.mission .done{color:var(--green)}
+
+/* MAP */
+.mapbox{background:radial-gradient(ellipse at center,#161310 0%,#0a0a0a 75%);border:1px solid var(--border);border-radius:14px;padding:14px}
+.mapbox svg{width:100%;height:auto;display:block}
+.pin{cursor:pointer}
+.pin:hover circle{fill:#ffe9b0}
+.mapinfo{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.mapinfo .card{text-align:center}
+
+/* LANG */
+.langgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:760px;margin:0 auto}
+.langbtn{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);color:var(--txt);padding:12px 14px;border-radius:10px;font-weight:700;font-size:1rem}
+.langbtn:hover{border-color:var(--gold)}
+.langbtn.sel{border-color:var(--gold);background:var(--panel2);box-shadow:0 0 12px rgba(217,164,65,.3)}
+.flag{width:28px;height:20px;border-radius:4px;display:inline-block;border:1px solid #000}
+
+/* AUTH */
+.authbox{max-width:400px;margin:30px auto;background:var(--panel);border:1px solid var(--gold);border-radius:14px;padding:26px}
+.authbox h2{color:var(--gold2);text-align:center;margin-bottom:16px}
+.authbox input{width:100%;background:#0d0b08;border:1px solid var(--border);color:var(--txt);padding:11px;border-radius:8px;margin-bottom:12px;font-size:.95rem}
+.authbox input:focus{outline:none;border-color:var(--gold)}
+.authbox .switch{color:var(--dim);text-align:center;font-size:.85rem;margin-top:10px}
+.authbox .switch a{cursor:pointer;font-weight:700}
+.err{color:var(--red);font-size:.85rem;margin-bottom:8px;text-align:center}
+.ok{color:var(--green);font-size:.85rem;margin-bottom:8px;text-align:center}
+.userchip{display:flex;align-items:center;gap:8px;color:var(--gold2);font-weight:700;font-size:.85rem}
+.userchip button{background:none;color:var(--dim);font-size:.78rem;text-decoration:underline}
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal.open{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--gold);border-radius:14px;padding:24px;max-width:440px;width:100%}
+.modal h3{color:var(--gold2);margin-bottom:14px}
+.modal input,.modal select{width:100%;background:#0d0b08;border:1px solid var(--border);color:var(--txt);padding:10px;border-radius:8px;margin-bottom:10px;font-size:.9rem}
+footer{border-top:1px solid var(--border);margin-top:30px;padding:20px 0;color:var(--dim);font-size:.85rem}
+footer .frow{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;max-width:1280px;margin:0 auto;padding:0 16px}
+.evid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.evid .card{min-height:110px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(160deg,#241a10,#141210)}
+.season{border:1px solid var(--gold);border-radius:12px;padding:16px;background:linear-gradient(160deg,#1c150c,#12100c)}
+.season .st{font-weight:800;font-size:1.1rem;color:var(--gold2)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,#f0c869,#c8922e);color:#1a1206;font-weight:700;padding:10px 22px;border-radius:99px;z-index:200;opacity:0;transition:.3s;pointer-events:none}
+.toast.show{opacity:1}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.g3,.g4,.evid,.mapinfo{grid-template-columns:1fr 1fr}.langgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.g3,.g4,.evid,.mapinfo,.langgrid{grid-template-columns:1fr}.hero h1{font-size:2.4rem}}
+</style>
 </head>
 <body>
-  <div class="embers" aria-hidden="true"></div>
-  <header class="site-header">
-    <a class="brand" href="#inicio" aria-label="PLAYFORJA, inicio">
-      <svg class="brand-mark" viewBox="0 0 100 100" role="img" aria-label="Yunque, corona y fuego">
-        <path d="M50 5 C37 21 45 26 34 37 C27 45 30 53 38 57 C35 45 48 42 48 32 C61 43 67 51 59 62 C78 54 79 34 64 20 C65 34 57 36 57 42 C58 26 52 17 50 5Z" fill="#ef6a22"/>
-        <path d="M25 25 L34 12 L50 20 L66 12 L75 25 L69 34 L31 34Z" fill="#f2c45d" stroke="#8f6422" stroke-width="2"/>
-        <circle cx="34" cy="22" r="3" fill="#fff0b5"/><circle cx="50" cy="24" r="3" fill="#fff0b5"/><circle cx="66" cy="22" r="3" fill="#fff0b5"/>
-        <path d="M23 48 H77 L70 61 H58 L58 69 H76 L81 79 H19 L24 69 H42 V61 H30Z" fill="#d9a83f" stroke="#80571d" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M36 82 H64 L70 89 H30Z" fill="#9c6c28"/>
+
+<header>
+  <div class="nav">
+    <div class="logo" onclick="go('inicio')">
+      <svg viewBox="0 0 64 64"><path d="M32 4 L40 18 L56 20 L44 32 L48 50 L32 42 L16 50 L20 32 L8 20 L24 18 Z" fill="#d9a441"/><path d="M26 34 h12 v6 h-12 z" fill="#1a1206"/><path d="M30 26 h4 v12 h-4 z" fill="#1a1206"/></svg>
+      PLAYFORJA
+    </div>
+    <div class="nav-links" id="navlinks"></div>
+    <div id="autharea"></div>
+  </div>
+</header>
+
+<div class="wrap" id="app"></div>
+
+<footer>
+  <div class="frow">
+    <div>© 2025 PLAYFORJA · Github Pages · Código abierto en GitHub</div>
+    <div>
+      <a href="#" onclick="go('evidencia');return false">Políticas</a> ·
+      <a href="#" onclick="go('evidencia');return false">Soporte</a> ·
+      <span style="color:var(--gold2)">Contacto: soporte@playforja.com</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal" id="modal"><div class="box" id="modalbox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================== DATOS / BASE DE DATOS LOCAL ================== */
+const DB_KEY='playforja_db_v1';
+function loadDB(){try{return JSON.parse(localStorage.getItem(DB_KEY))||defDB()}catch(e){return defDB()}}
+function saveDB(){localStorage.setItem(DB_KEY,JSON.stringify(db))}
+function defDB(){return {users:{},session:null,lang:'es-AR',joined:{},tournaments:[],claims:{},progress:{}}}
+let db=loadDB(); saveDB();
+
+const LANGS=[
+ {id:'es-AR',nm:'Español Argentino',flag:'linear-gradient(180deg,#74acdf 33%,#fff 33%,#fff 66%,#74acdf 66%)'},
+ {id:'pt',nm:'Português',flag:'linear-gradient(180deg,#009b3a 50%,#ffdf00 50%)'},
+ {id:'en',nm:'English',flag:'repeating-linear-gradient(180deg,#b22234 0 3px,#fff 3px 6px)'},
+ {id:'fr',nm:'Français',flag:'linear-gradient(90deg,#0055a4 33%,#fff 33%,#fff 66%,#ef4135 66%)'},
+ {id:'de',nm:'Deutsch',flag:'linear-gradient(180deg,#000 33%,#dd0000 33%,#dd0000 66%,#ffce00 66%)'},
+ {id:'ja',nm:'日本語',flag:'radial-gradient(circle at center,#bc002d 30%,#fff 32%)'},
+ {id:'es',nm:'Español',flag:'linear-gradient(180deg,#aa151b 25%,#f1bf00 25%,#f1bf00 75%,#aa151b 75%)'},
+ {id:'ko',nm:'한국어',flag:'linear-gradient(180deg,#fff 50%,#cd2e3a 50%)'}
+];
+const T={
+ 'es-AR':{play:'Jugá 5 partidas',win:'Ganá 3',top:'Llegá a Top 3',join:'UNIRSE',joined:'ANOTADO',cancel:'CANCELAR',claim:'RECLAMAR',claimed:'RECLAMADO',login:'Entrar',reg:'Crear cuenta',logout:'Salir'},
+ 'es':{play:'Juega 5 partidas',win:'Gana 3',top:'Llega a Top 3',join:'UNIRSE',joined:'ANOTADO',cancel:'CANCELAR',claim:'RECLAMAR',claimed:'RECLAMADO',login:'Entrar',reg:'Crear cuenta',logout:'Salir'},
+ 'en':{play:'Play 5 matches',win:'Win 3',top:'Reach Top 3',join:'JOIN',joined:'JOINED',cancel:'CANCEL',claim:'CLAIM',claimed:'CLAIMED',login:'Log in',reg:'Create account',logout:'Log out'},
+ 'pt':{play:'Jogue 5 partidas',win:'Ganhe 3',top:'Chegue ao Top 3',join:'ENTRAR',joined:'INSCRITO',cancel:'CANCELAR',claim:'RESGATAR',claimed:'RESGATADO',login:'Entrar',reg:'Criar conta',logout:'Sair'},
+ 'fr':{play:'Joue 5 matchs',win:'Gagne 3',top:'Atteins le Top 3',join:'REJOINDRE',joined:'INSCRIT',cancel:'ANNULER',claim:'RÉCUPÉRER',claimed:'RÉCUPÉRÉ',login:'Connexion',reg:'Créer un compte',logout:'Déconnexion'},
+ 'de':{play:'Spiele 5 Runden',win:'Gewinne 3',top:'Erreiche Top 3',join:'BEITRETEN',joined:'ANGEMELDET',cancel:'ABBRECHEN',claim:'ABHOLEN',claimed:'ABGEHOLT',login:'Anmelden',reg:'Konto erstellen',logout:'Abmelden'},
+ 'ja':{play:'5試合プレイ',win:'3勝する',top:'トップ3に入る',join:'参加',joined:'参加済み',cancel:'キャンセル',claim:'受け取る',claimed:'受取済み',login:'ログイン',reg:'アカウント作成',logout:'ログアウト'},
+ 'ko':{play:'5경기 플레이',win:'3승',top:'탑3 달성',join:'참가',joined:'참가됨',cancel:'취소',claim:'수령',claimed:'수령됨',login:'로그인',reg:'계정 만들기',logout:'로그아웃'}
+};
+const t=k=>(T[db.lang]||T['es-AR'])[k];
+
+const RANKS=[
+ {nm:'Bronce',c:'#a5623a',xp:0},{nm:'Plata',c:'#b8bcc2',xp:200},{nm:'Oro',c:'#d9a441',xp:500},
+ {nm:'Platino',c:'#e8f2f5',xp:900},{nm:'Diamante',c:'#6fd3f2',xp:1400},{nm:'Leyenda',c:'#ffd700',xp:2000}
+];
+const MISSIONS={
+ daily:[{id:'d1',d:'Completá 3 partidas',xp:50},{id:'d2',d:'Ganá 1 ronda sin morir',xp:30},{id:'d3',d:'Reclamá recompensa diaria',xp:0,cofre:'Cofre Bronce'}],
+ weekly:[{id:'w1',d:'Alcanzá 5 victorias PvP',xp:200},{id:'w2',d:'Completá 10 objetivos en equipo',xp:150},{id:'w3',d:'Reclamá el domingo',xp:0,cofre:'Cofre Plata'}],
+ season:[{id:'s1',d:'Lográ 25k de puntos estacionales',xp:1000},{id:'s2',d:'Desbloqueá 3 logros épicos',xp:500},{id:'s3',d:'Temporada 04: Reclamá cofre Platino',xp:0,cofre:'Cofre Platino'}]
+};
+const REGIONS=[
+ {id:'buenosaires',nm:'Buenos Aires',pais:'Argentina',zona:'LATAM',ping:28,x:246,y:428},
+ {id:'saopaulo',nm:'São Paulo',pais:'Brasil',zona:'LATAM',ping:32,x:300,y:418},
+ {id:'santiago',nm:'Santiago',pais:'Chile',zona:'LATAM',ping:30,x:226,y:438},
+ {id:'cdmx',nm:'CDMX',pais:'México',zona:'LATAM',ping:35,x:170,y:300},
+ {id:'usa',nm:'Miami',pais:'USA',zona:'NA / EU',ping:120,x:230,y:250},
+ {id:'espana',nm:'Madrid',pais:'España',zona:'NA / EU',ping:180,x:470,y:238},
+ {id:'francia',nm:'París',pais:'Francia',zona:'NA / EU',ping:185,x:492,y:222},
+ {id:'japon',nm:'Tokio',pais:'Japón',zona:'APAC',ping:250,x:806,y:262}
+];
+let page='inicio';
+
+/* ================== ICONOS SVG ================== */
+const I={
+ fire:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#ff7a1a"><path d="M12 2c1 4-3 5-3 9a3 3 0 006 0c0-2-1-3-1-3 3 1 5 4 5 7a7 7 0 01-14 0c0-6 6-8 7-13z"/></svg>',
+ moon:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#b8bcc2"><path d="M21 13a9 9 0 11-10-11 7 7 0 0010 11z"/></svg>',
+ trophy:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#d9a441"><path d="M6 3h12v2h3v3a4 4 0 01-4 4 6 6 0 01-4 4v3h3v2H8v-2h3v-3a6 6 0 01-4-4 4 4 0 01-4-4V5h3V3zm-2 4v1a2 2 0 002 2V7H4zm16 0h-2v3a2 2 0 002-2V7z"/></svg>',
+ map:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#d9a441"><path d="M9 3l6 2 6-2v16l-6 2-6-2-6 2V5l6-2zm0 2.2L5 6.3v12.4l4-1.3V5.2zm2 .1v12.2l4 1.3V6.6l-4-1.3z"/></svg>',
+ lang:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#d9a441"><circle cx="12" cy="12" r="9" fill="none" stroke="#d9a441" stroke-width="2"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" fill="none" stroke="#d9a441" stroke-width="2"/></svg>',
+ shield:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#d9a441"><path d="M12 2l8 3v6c0 5-3.5 9.5-8 11-4.5-1.5-8-6-8-11V5l8-3z"/></svg>',
+ crown:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#ffd700"><path d="M3 7l4 4 5-6 5 6 4-4v10H3V7z"/></svg>',
+ gem:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#6fd3f2"><path d="M6 3h12l4 6-10 12L2 9l4-6z"/></svg>',
+ tv:'<svg viewBox="0 0 24 24" width="20" height="20" fill="#d9a441"><path d="M3 5h18v12H3V5zm5 14h8v2H8v-2z"/></svg>',
+ dl:'<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M11 3h2v8l3-3 1.5 1.5L12 15 6.5 9.5 8 8l3 3V3zM5 19h14v2H5v-2z"/></svg>',
+ coin:'<svg viewBox="0 0 24 24" width="16" height="16" fill="#ffd700"><circle cx="12" cy="12" r="9"/><text x="12" y="16" text-anchor="middle" font-size="10" fill="#1a1206" font-weight="bold">PF</text></svg>',
+ check:'<svg viewBox="0 0 24 24" width="16" height="16" fill="#8bc34a"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>',
+ chest:'<svg viewBox="0 0 24 24" width="16" height="16" fill="#d9a441"><path d="M4 8a4 4 0 014-4h8a4 4 0 014 4v2H4V8zm0 4h9v2h-2v4H4v-6zm11 2h5v4h-7v-4h2z"/></svg>'
+};
+function rankSVG(r,i){return `<svg viewBox="0 0 64 64"><defs><linearGradient id="rg${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="${r.c}"/></linearGradient></defs><path d="M32 4 L56 12 V32 C56 46 45 56 32 60 C19 56 8 46 8 32 V12 Z" fill="url(#rg${i})" stroke="${r.c}" stroke-width="2"/></svg>`}
+
+/* ================== NAVEGACIÓN ================== */
+const NAV=[['inicio','Inicio'],['torneos','Torneos'],['salas','Salas'],['misiones','Misiones'],['marcos','Marcos'],['temporadas','Temporadas'],['streaming','Streaming'],['idiomas','Idiomas'],['mapa','Maps'],['evidencia','Evidencia']];
+function renderNav(){
+  document.getElementById('navlinks').innerHTML=NAV.map(([id,nm])=>
+   `<button class="${page===id?'active':''}" onclick="go('${id}')">${nm}</button>`).join('');
+  const a=document.getElementById('autharea');
+  if(db.session){const u=db.users[db.session];
+    a.innerHTML=`<div class="userchip">${I.coin} ${u.nick} · ${u.pf} PF <button onclick="logout()">${t('logout')}</button></div>`;
+  } else {
+    a.innerHTML=`<button class="btn-gold" onclick="go('cuenta')">${t('login')} / ${t('reg')}</button>`;
+  }
+}
+function go(p){page=p;renderNav();render();window.scrollTo(0,0)}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200)}
+
+/* ================== AUTENTICACIÓN (cuenta propia) ================== */
+function hash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h.toString(36)}
+function renderAuth(){
+  if(db.session){go('inicio');return}
+  app.innerHTML=`
+  <div class="authbox">
+    <h2>${I.shield} PLAYFORJA</h2>
+    <div id="authmsg"></div>
+    <input id="auser" placeholder="Nombre de usuario" autocomplete="off"/>
+    <input id="apass" type="password" placeholder="Contraseña"/>
+    <button class="btn-gold" style="width:100%;justify-content:center" onclick="doReg()">${t('reg')}</button>
+    <div class="switch">¿Ya tenés cuenta? <a onclick="go('login')">Entrar acá</a></div>
+    <p class="sub" style="margin-top:14px">Cuenta propia de PLAYFORJA. Tus datos quedan guardados en este dispositivo. Sin Google ni redes.</p>
+  </div>`;
+}
+function doReg(){
+  const u=document.getElementById('auser').value.trim(), p=document.getElementById('apass').value;
+  const m=document.getElementById('authmsg');
+  if(u.length<3) return m.innerHTML='<div class="err">El usuario necesita al menos 3 caracteres.</div>';
+  if(p.length<4) return m.innerHTML='<div class="err">La contraseña necesita al menos 4 caracteres.</div>';
+  if(db.users[u.toLowerCase()]) return m.innerHTML='<div class="err">Ese usuario ya existe. Elegí otro.</div>';
+  db.users[u.toLowerCase()]={nick:u,pass:hash(p),pf:1200,xp:0,wins:0,created:Date.now()};
+  db.session=u.toLowerCase(); saveDB(); toast('¡Cuenta creada! Bienvenido a la Forja, '+u); go('inicio');
+}
+function doLogin(){
+  const u=document.getElementById('auser').value.trim().toLowerCase(), p=document.getElementById('apass').value;
+  const m=document.getElementById('authmsg');
+  const acc=db.users[u];
+  if(!acc||acc.pass!==hash(p)) return m.innerHTML='<div class="err">Usuario o contraseña incorrectos.</div>';
+  db.session=u; saveDB(); toast('Bienvenido de nuevo, '+acc.nick); go('inicio');
+}
+function logout(){db.session=null;saveDB();go('inicio');toast('Sesión cerrada')}
+
+/* ================== PÁGINAS ================== */
+const app=document.getElementById('app');
+
+function heroSection(){
+  return `<section class="hero">
+    <div>
+      <h1>PLAYFORJA</h1>
+      <div class="tag">Forjá tu leyenda</div>
+      <div class="hero-cta">
+        <button class="btn-gold" onclick="toast('La app móvil de PLAYFORJA estará disponible al publicarla. ¡Pronto!')">${I.dl} Descargar App</button>
+        <button class="btn-outline" onclick="go('marcos')">${I.coin} Sin plata real solo Monedas PF y XP</button>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg class="shield" viewBox="0 0 100 100">
+        <path d="M50 6 L88 18 V50 C88 72 70 88 50 96 C30 88 12 72 12 50 V18 Z" fill="#1a1206" stroke="#d9a441" stroke-width="3"/>
+        <path d="M50 14 L80 24 V50 C80 67 66 81 50 88 C34 81 20 67 20 50 V24 Z" fill="#2a1c0a"/>
+        <path d="M50 30 c2 8 -6 10 -6 18 a6 6 0 0012 0 c0-4-2-6-2-6 6 2 10 8 10 14 a14 14 0 01-28 0 c0-12 12-16 14-26z" fill="#ff7a1a"/>
+        <rect x="40" y="58" width="20" height="8" rx="2" fill="#d9a441"/>
       </svg>
-      <span class="brand-word">PLAY<span>FORJA</span><small>FORJÁ TU LEYENDA</small></span>
-    </a>
-    <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
-    <nav class="main-nav" aria-label="Navegación principal">
-      <a href="#inicio">Inicio</a><a href="#torneos">Torneos</a><a href="#salas">Salas</a>
-      <a href="#misiones">Misiones</a><a href="#marcos">Marcos</a><a href="#temporadas">Temporadas</a>
-      <a href="#streaming">Streaming</a><a href="#idiomas">Idiomas</a><a href="#evidencia">Evidencia</a>
-      <a class="nav-download" href="#descargar">Descargar App</a>
-    </nav>
-  </header>
+    </div>
+  </section>`;
+}
 
-  <main>
-    <section class="hero section-wrap" id="inicio">
-      <div class="hero-copy">
-        <div class="eyebrow"><span></span> ARENA COMPETITIVA GLOBAL</div>
-        <h1>FORJÁ<br><em>TU LEYENDA.</em></h1>
-        <p class="hero-lead">Tu habilidad. Tu equipo. Tu historia. Entrá a la arena y conquistá tu lugar en PLAYFORJA.</p>
-        <p class="hero-note">Sin plata real. Solo <b>Monedas PF</b> y <b>XP</b>.</p>
-        <div class="hero-actions"><a class="btn btn-gold" href="#descargar">Descargar App <span>↗</span></a><a class="btn btn-outline" href="#torneos">Ver Torneos</a></div>
-        <div class="hero-stats"><div><strong>GLOBAL</strong><small>Comunidad</small></div><div><strong>FAIR PLAY</strong><small>Competencia justa</small></div><div><strong>XP + PF</strong><small>Progresión</small></div></div>
-      </div>
-      <div class="hero-art">
-        <div class="hero-ring ring-one"></div><div class="hero-ring ring-two"></div>
-        <div class="hero-emblem">
-          <svg viewBox="0 0 300 330" role="img" aria-label="Emblema PLAYFORJA con corona, fuego y yunque">
-            <defs><linearGradient id="gold" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff0a8"/><stop offset=".45" stop-color="#e5b64c"/><stop offset="1" stop-color="#8d5b19"/></linearGradient><linearGradient id="flame" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#ffd56b"/><stop offset="1" stop-color="#e34a13"/></linearGradient></defs>
-            <path d="M150 12 C103 73 142 81 102 123 C68 159 88 205 119 218 C103 175 150 162 143 122 C190 165 205 199 174 229 C237 202 236 140 187 87 C195 129 166 139 166 154 C169 101 155 53 150 12Z" fill="url(#flame)" opacity=".96"/>
-            <path d="M73 84 L99 49 L150 69 L201 49 L227 84 L211 119 L89 119Z" fill="url(#gold)" stroke="#6f4a16" stroke-width="5"/>
-            <path d="M70 173 H230 L210 210 H174 V236 H224 L242 270 H58 L76 236 H126 V210 H90Z" fill="url(#gold)" stroke="#6f4a16" stroke-width="5" stroke-linejoin="round"/>
-            <path d="M112 279 H188 L207 302 H93Z" fill="#9a6821"/>
-            <path d="M91 93 L105 72 L132 82 M209 93 L195 72 L168 82" fill="none" stroke="#fff0b5" stroke-width="5" stroke-linecap="round"/>
-          </svg>
-          <div class="emblem-caption">PLAYFORJA <span>✦</span> ARENA</div>
-        </div>
-        <div class="floating-tag tag-top">⚔ COMPETÍ</div><div class="floating-tag tag-bottom">🔥 SUPERATE</div>
-      </div>
-    </section>
+function torneoCards(){
+  const base=[
+   {id:'mlbb',g:'Mobile Legends 5v5',b:'Móvil',bc:'b-movil',modo:'Clasificatorio · Hoy 21:00 ART',slots:'12/40 anotados',pf:'+170 créditos PF'},
+   {id:'valo',g:'Valorant PC 5v5',b:'PC',bc:'b-pc',modo:'Mód: Custom · Hoy 22:30 ART',slots:'29/30 anotados',pf:'+810 créditos PF'},
+   {id:'ff',g:'Free Fire Squad',b:'Móvil',bc:'b-movil',modo:'Squad · Hoy 20:00 ART',slots:'16/48 anotados',pf:'+2500 XP'}
+  ];
+  return `<section>
+   <h2 class="sec">Torneos Activos</h2>
+   <p class="sub">Competí, ganá y subí de rango · sin dinero real</p>
+   <div class="tabs">
+     <button class="active" onclick="toast('Mostrando todos los torneos')">Todos</button>
+     <button onclick="toast('Filtro PC')">PC</button>
+     <button onclick="toast('Filtro Móvil')">Móvil</button>
+     <button onclick="toast('Filtro Tablet')">Tablet</button>
+   </div>
+   <div class="grid g3">
+   ${base.map(c=>{
+     const joined=(db.joined[c.id]||[]).includes(db.session);
+     return `<div class="card"><span class="badge ${c.bc}">${c.b}</span>
+      <h3>${c.g}</h3><div class="meta">Modo: ${c.modo}<br>${c.pf}</div>
+      <div class="joinrow"><div class="slots">👥 ${c.slots}</div>
+      <button class="btn-sm" ${joined?'disabled':''} onclick="joinTorneo('${c.id}')">${joined?t('joined'):t('join')}</button></div></div>`;
+   }).join('')}
+   </div>
+   <div style="text-align:center;margin-top:16px"><button class="btn-gold" onclick="crearTorneoModal()">+ CREAR TORNEO</button></div>
+  </section>`;
+}
 
-    <section class="ticker" aria-label="Lema"><span>HABILIDAD</span> ✦ <span>ESTRATEGIA</span> ✦ <span>RESPETO</span> ✦ <span>LEYENDA</span> ✦ <span>HABILIDAD</span> ✦ <span>ESTRATEGIA</span></section>
+function joinTorneo(id){
+  if(!db.session){toast('Primero creá tu cuenta para anotarte');go('cuenta');return}
+  db.joined[id]=db.joined[id]||[];
+  if(db.joined[id].includes(db.session)){toast('Ya estabas anotado');return}
+  db.joined[id].push(db.session);
+  addXP(100); saveDB(); toast('¡Te anotaste! +100 XP'); render();
+}
+function crearTorneoModal(){
+  if(!db.session){toast('Necesitás una cuenta para crear torneos');go('cuenta');return}
+  openModal(`<h3>+ Crear Torneo</h3>
+   <input id="tnm" placeholder="Nombre del torneo"/>
+   <select id="tgm"><option>Mobile Legends</option><option>Valorant</option><option>Free Fire</option><option>Otro</option></select>
+   <select id="tpf"><option>PC</option><option>Móvil</option><option>Tablet</option></select>
+   <input id="tpr" placeholder="Premio (créditos PF)" type="number" value="500"/>
+   <button class="btn-gold" style="width:100%;justify-content:center" onclick="crearTorneo()">CREAR</button>`);
+}
+function crearTorneo(){
+  const nm=document.getElementById('tnm').value.trim()||'Torneo sin nombre';
+  const gm=document.getElementById('tgm').value, pf=document.getElementById('tpf').value, pl=document.getElementById('tpf')?'':'';
+  const plataforma=document.getElementById('tpf').value;
+  db.tournaments.push({nm,gm,plataforma,premio:pf,by:db.session,date:Date.now()});
+  saveDB(); closeModal(); toast('Torneo "'+nm+'" creado'); go('torneos');
+}
 
-    <section class="section-wrap section" id="torneos">
-      <div class="section-heading"><div><div class="eyebrow">LA ARENA TE ESPERA</div><h2>TORNEOS <em>DESTACADOS</em></h2></div><span class="section-index">01 / COMPETÍ</span></div>
-      <div class="card-grid three">
-        <article class="game-card game-ml"><div class="game-visual"><span class="game-symbol">✦</span><span class="game-label">MOBILE ARENA</span></div><div class="card-content"><span class="pill">CLASIFICATORIO · 5V5</span><h3>Mobile Legends</h3><p>Demostrá tu estrategia en equipo y avanzá en la clasificación.</p><div class="card-meta"><span>Premios</span><b>Créditos PF</b></div><button class="btn btn-gold full join-btn" data-item="Torneo Mobile Legends">Unirse <span>→</span></button></div></article>
-        <article class="game-card game-val"><div class="game-visual"><span class="game-symbol">V</span><span class="game-label">TACTICAL STRIKE</span></div><div class="card-content"><span class="pill">SPIKE · ELIMINACIÓN DIRECTA</span><h3>VALORANT</h3><p>PC · Equipos 5 contra 5. Cada ronda cuenta.</p><div class="card-meta"><span>Cupos</span><b>32 de 32</b></div><button class="btn btn-gold full join-btn" data-item="Torneo Valorant" disabled>Cupos completos</button></div></article>
-        <article class="game-card game-ff"><div class="game-visual"><span class="game-symbol">火</span><span class="game-label">BATTLE ROYALE</span></div><div class="card-content"><span class="pill">SQUAD · SUPERVIVENCIA</span><h3>FREE FIRE</h3><p>Tu escuadra contra todos. Solo uno llega a la cima.</p><div class="card-meta"><span>Recompensa</span><b>Skin exclusiva</b></div><button class="btn btn-gold full join-btn" data-item="Torneo Free Fire">Unirse <span>→</span></button></div></article>
-      </div>
-      <div class="create-panel"><div><span class="eyebrow">TU PARTIDA, TUS REGLAS</span><h3>CREÁ TU PROPIO TORNEO</h3><p>Elegí el juego y la plataforma para armar tu desafío.</p></div><div class="create-controls"><label for="game-choice">Elegir juego</label><select id="game-choice"><option>Mobile Legends</option><option>Valorant</option><option>Free Fire</option><option>Otro juego</option></select><div class="platform-picker" role="group" aria-label="Elegir plataforma"><button class="platform active" data-platform="PC">PC</button><button class="platform" data-platform="Móvil">Móvil</button><button class="platform" data-platform="Tablet">Tablet</button></div><button class="btn btn-gold" id="create-tournament">＋ Crear Torneo</button></div></div>
-    </section>
+function homePage(){
+  const u=db.users[db.session];
+  const pct=u?Math.min(100,Math.round(u.xp/1750*100)):68;
+  return heroSection()+torneoCards()+`
+  <section><div class="grid g3">
+    <div class="card" onclick="go('salas')" style="cursor:pointer"><h3>${I.fire} Duelo Infernal</h3>
+      <div class="meta">1 vs 1 · Mapa Aleatorio · Premio: +100 XP<br>Estado: Abierto ahora<br>Rango: Plata+</div></div>
+    <div class="card" onclick="go('salas')" style="cursor:pointer"><h3>${I.moon} Torneo Nocturno</h3>
+      <div class="meta">5 vs 5 · Mód: Nocturno · Premio: Marco<br>Estado: Hoy (00:00 ART)<br>Rango: Oro+</div></div>
+    <div class="card" onclick="go('misiones')" style="cursor:pointer"><h3>${I.trophy} Progresión</h3>
+      <div class="meta">Tu progreso a Leyenda</div>
+      <div class="progressbar"><div style="width:${pct}%"></div></div>
+      <div class="meta">${u?u.xp+' XP · '+pct+'%':'Iniciá sesión para ver tu progreso'}</div></div>
+  </div></section>
 
-    <section class="section section-dark" id="salas"><div class="section-wrap">
-      <div class="section-heading"><div><div class="eyebrow">ENCONTRÁ TU EQUIPO</div><h2>SALAS DE <em>JUEGO</em></h2></div><span class="section-index">02 / CONECTATE</span></div>
-      <div class="search-row"><p>Entrá a una sala y sumate a la acción.</p><label class="search-box"><span>⌕</span><input id="room-search" type="search" placeholder="Buscar sala, mapa o estado…" aria-label="Buscar salas"></label></div>
-      <div class="room-grid" id="room-list">
-        <article class="room-card" data-search="duelo infernal volcan ardiente en curso"><div class="room-icon">⚔</div><div class="room-info"><span class="status live">● EN CURSO</span><h3>Duelo Infernal 1v1</h3><p>Mapa Volcán Ardiente</p><small>4 de 8 jugadores</small></div><button class="btn btn-outline join-btn" data-item="Sala Duelo Infernal">Unirse</button></article>
-        <article class="room-card" data-search="torneo nocturno fortaleza nocturna esperando"><div class="room-icon">◈</div><div class="room-info"><span class="status waiting">● ESPERANDO</span><h3>Torneo Nocturno</h3><p>Mapa Fortaleza Nocturna</p><small>2 de 6 jugadores</small></div><button class="btn btn-outline join-btn" data-item="Sala Torneo Nocturno">Unirse</button></article>
-        <article class="room-card" data-search="en vivo campeonato directo finales liga fuego"><div class="room-icon">▶</div><div class="room-info"><span class="status live">● EN VIVO</span><h3>Campeonato en Directo</h3><p>Finales · Liga de Fuego</p><small>128 espectadores viendo</small></div><a class="btn btn-outline" href="#streaming">Ver directo</a></article>
-      </div><p class="empty-state" id="empty-rooms" hidden>No encontramos salas con esa búsqueda.</p>
-    </div></section>
+  <section>
+    <h2 class="sec">Mapa Mundial</h2>
+    <p class="sub">Conectando jugadores de todo el mundo · servidores por región</p>
+    <div class="mapbox">${worldMapSVG(110)}</div>
+    <div class="mapinfo">
+      <div class="card"><h3>${I.map} Servidores LATAM</h3><div class="meta">Argentina · Brasil · México · Chile</div></div>
+      <div class="card"><h3>${I.map} Servidores NA / EU</h3><div class="meta">USA · España · Francia</div></div>
+      <div class="card"><h3>${I.map} Servidores APAC</h3><div class="meta">Japón · Corea</div></div>
+    </div>
+    <div style="text-align:center;margin-top:12px"><button class="btn-outline" onclick="go('mapa')">Ver Mapa Mundial completo</button></div>
+  </section>
 
-    <section class="section section-wrap" id="marcos">
-      <div class="section-heading"><div><div class="eyebrow">PERSONALIZÁ TU PERFIL</div><h2>TIENDA DE <em>MARCOS</em></h2></div><div class="balance">SALDO DISPONIBLE <strong>12.450 XP</strong></div></div>
-      <div class="frame-grid">
-        <article class="frame-card"><div class="frame-preview frame-legend"><span>PF</span></div><h3>Marco Leyenda</h3><b>2.500 XP</b><button class="btn btn-outline buy-btn" data-frame="Marco Leyenda">Comprar</button></article>
-        <article class="frame-card"><div class="frame-preview frame-fire"><span>PF</span></div><h3>Marco Fuego</h3><b>1.800 XP</b><button class="btn btn-outline buy-btn" data-frame="Marco Fuego">Comprar</button></article>
-        <article class="frame-card"><div class="frame-preview frame-gold"><span>PF</span></div><h3>Marco Oro</h3><b>1.200 XP</b><button class="btn btn-outline buy-btn" data-frame="Marco Oro">Comprar</button></article>
-        <article class="frame-card"><div class="frame-preview frame-diamond"><span>PF</span></div><h3>Marco Diamante</h3><b>3.000 XP</b><button class="btn btn-outline buy-btn" data-frame="Marco Diamante">Comprar</button></article>
-      </div>
-      <div class="credits-line"><span>CRÉDITOS PF <strong>12.450</strong></span><span>XP DISPONIBLE <strong>12.450</strong></span></div>
-    </section>
+  <section>
+    <h2 class="sec">Temporadas</h2>
+    <div class="grid g3">
+      <div class="season"><div class="st">${I.coin} Temporada 1<br>FORJA INICIAL</div>
+        <div class="meta" style="margin:8px 0">Marzo 2025 · Finalizada<br>Recompensas: Marco Leyenda</div>
+        <button class="btn-sm" onclick="toast('La Temporada 1 ya finalizó. ¡VOLVE en la 2!')">Completada</button></div>
+      <div class="season"><div class="st">${I.gem} Temporada 2<br>LLAMA ETERNA</div>
+        <div class="meta" style="margin:8px 0">Abril 2025 · En curso<br>Recompensas: Marco Fuego</div>
+        <button class="btn-sm" onclick="toast('Temporada 2 en curso: completá misiones para el Marco Fuego')">En curso</button></div>
+      <div class="card" onclick="go('evidencia')" style="cursor:pointer"><h3>Galería de Evidencia</h3>
+        <div class="meta">Logros y capturas validadas por la comunidad</div></div>
+    </div>
+  </section>
 
-    <section class="section section-dark" id="misiones"><div class="section-wrap">
-      <div class="section-heading"><div><div class="eyebrow">GANATE CADA ASCENSO</div><h2>PROGRESIÓN <em>QUE NO SE REGALA</em></h2></div><span class="section-index">03 / SUPERATE</span></div>
-      <div class="rank-panel"><div class="rank-top"><div><span class="eyebrow">TU CAMINO</span><h3>ORO <span>→</span> PLATINO</h3></div><strong>68<small>%</small></strong></div><div class="progress-track"><span style="width:68%"></span></div><div class="rank-labels"><span>BRONCE</span><span>PLATA</span><span class="current">ORO</span><span>PLATINO</span><span>DIAMANTE</span><span>LEYENDA</span></div></div>
-      <div class="mission-grid">
-        <article class="mission-card"><span class="mission-kicker">CADA DÍA</span><h3>MISIONES DIARIAS</h3><ul><li><span>Completá 2 partidas</span><b>+150 EXP</b></li><li><span>Jugá con tu equipo</span><b>+200 EXP</b></li><li><span>Conseguí 1 victoria</span><b>+250 EXP</b></li></ul></article>
-        <article class="mission-card"><span class="mission-kicker">CADA SEMANA</span><h3>MISIONES SEMANALES</h3><ul><li><span>Ganá 5 partidas</span><b>+700 EXP</b></li><li><span>Jugá 10 encuentros</span><b>+500 EXP</b></li><li><span>Alcanzá el Top 3</span><b>+900 EXP</b></li></ul></article>
-        <article class="mission-card"><span class="mission-kicker">CICLO ACTUAL</span><h3>MISIONES DE TEMPORADA</h3><ul><li><span>Completá 30 partidas</span><b>+1.500 EXP</b></li><li><span>Subí una división</span><b>+2.000 EXP</b></li><li><span>Superá 3 desafíos</span><b>+1.200 EXP</b></li></ul></article>
-      </div>
-      <p class="manifesto">DIFÍCIL PERO JUSTO. <em>NO ES FÁCIL. NO ES IMPOSIBLE.</em></p>
-    </div></section>
+  <section>
+    <h2 class="sec">Evidencia</h2>
+    <p class="sub">Galería de logros y capturas validadas por la comunidad</p>
+    <div class="evid">
+      <div class="card"><span class="badge b-pc">Victoria 5v5</span><div class="meta">+120 XP</div></div>
+      <div class="card"><span class="badge b-movil">MVP Desquiciado</span><div class="meta">18/2/5</div></div>
+      <div class="card"><span class="badge b-pc">Top 1</span><div class="meta">Torneo Nocturno</div></div>
+    </div>
+  </section>`;
+}
 
-    <section class="section section-wrap" id="temporadas">
-      <div class="section-heading"><div><div class="eyebrow">EL JUEGO EVOLUCIONA</div><h2>NUEVAS TEMPORADAS, <em>NUEVOS RETOS</em></h2></div><span class="section-index">04 / EVOLUCIONÁ</span></div>
-      <div class="season-grid">
-        <article class="season-card season-old"><span class="season-number">TEMPORADA 01</span><span class="pill muted">FINALIZADA</span><h3>FORJA INICIAL</h3><ul><li>Primer ciclo completado</li><li>Fundamos la base competitiva</li><li>Recompensas iniciales desbloqueadas</li></ul></article>
-        <article class="season-card season-new"><span class="season-number">TEMPORADA 02</span><span class="pill">NUEVA</span><h3>FORJA MEJORADA</h3><ul><li>Nuevos mapas y misiones</li><li>Balanceo y recompensas mejoradas</li><li>Dificultad y dinámicas renovadas</li></ul></article>
-      </div>
-      <div class="season-message"><h3>TORNEOS QUE ROTAN Y MEJORAN.</h3><p>Cuando termina un torneo, empieza otro mejorado. Nunca repetitivo.</p><div><span>✦ Nuevos mapas</span><span>✦ Nuevas misiones</span><span>✦ Nuevos desafíos</span></div></div>
-    </section>
+/* ---- MAPA MUNDIAL ---- */
+let mapSel=null;
+function worldMapSVG(scale){
+  const dots=[[150,260],[180,240],[210,290],[170,300],[230,250],[300,418],[246,428],[226,438],[300,300],[420,240],[470,238],[492,222],[520,260],[560,300],[640,250],[700,270],[806,262],[760,300],[860,240]];
+  return `<svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg">
+   <g fill="none" stroke="#d9a441" stroke-width="1" opacity=".8">
+    <path d="M120 180 Q160 140 220 160 Q260 130 300 170 Q280 220 250 240 Q200 260 170 320 Q140 300 130 250 Q110 210 120 180 Z"/>
+    <path d="M200 340 Q230 360 240 420 Q250 470 235 500 Q210 480 200 430 Q190 380 200 340 Z"/>
+    <path d="M280 330 Q330 320 360 360 Q380 420 360 470 Q330 500 310 470 Q290 420 280 330 Z"/>
+    <path d="M440 200 Q500 180 560 200 Q590 240 570 280 Q540 300 520 340 Q500 380 480 340 Q450 300 440 250 Q430 220 440 200 Z"/>
+    <path d="M580 180 Q680 150 780 180 Q860 200 880 260 Q840 300 780 300 Q720 320 680 280 Q620 260 590 230 Q570 200 580 180 Z"/>
+    <path d="M780 340 Q830 350 840 400 Q830 450 800 440 Q780 400 780 340 Z"/>
+    <path d="M840 420 Q880 430 890 470 Q870 500 850 480 Q835 450 840 420 Z"/>
+   </g>
+   <g stroke="#d9a441" stroke-width=".6" opacity=".45">
+    ${dots.map((d,i)=>dots.slice(i+1).map(e=>`<line x1="${d[0]}" y1="${d[1]}" x2="${e[0]}" y2="${e[1]}"/>`).join('')).join('')}
+   </g>
+   ${dots.map(d=>`<circle cx="${d[0]}" cy="${d[1]}" r="3" fill="#f5d47a" opacity=".9"/>`).join('')}
+   ${REGIONS.map(r=>`<g class="pin" onclick="pinClick('${r.id}')" transform="translate(${r.x},${r.y})">
+      <circle r="${mapSel===r.id?9:6}" fill="${mapSel===r.id?'#ffe9b0':'#ff7a1a'}" stroke="#fff" stroke-width="1.5"/>
+      <text y="-14" text-anchor="middle" fill="#f5d47a" font-size="13" font-weight="bold">${r.nm}</text>
+      <text y="24" text-anchor="middle" fill="#9a917f" font-size="11">${r.pais} · ${r.ping}ms</text>
+    </g>`).join('')}
+  </svg>`;
+}
+function pinClick(id){
+  mapSel=id; const r=REGIONS.find(x=>x.id===id);
+  toast(`Servidor ${r.nm} (${r.pais}) · Región ${r.zona} · Ping ${r.ping}ms · online 24/7`);
+  render();
+}
+function mapPage(){
+  const sel=REGIONS.find(r=>r.id===mapSel);
+  return `<section>
+   <h2 class="sec" style="font-size:2.2rem">MAPA MUNDIAL</h2>
+   <p class="sub" style="font-size:1.1rem;color:var(--gold2)">PLAYFORJA GLOBAL</p>
+   <p class="sub">Conectando jugadores de todo el mundo · Servidores por región · 24/7</p>
+   <div class="mapbox">${worldMapSVG()}</div>
+   <div class="mapinfo">
+    <div class="card"><h3>Servidores LATAM</h3><div class="meta">Argentina · Brasil · México · Chile</div></div>
+    <div class="card"><h3>Servidores NA / EU</h3><div class="meta">USA · España · Francia</div></div>
+    <div class="card"><h3>Servidores APAC</h3><div class="meta">Japón · Corea</div></div>
+   </div>
+   ${sel?`<div class="card" style="margin-top:14px;text-align:center"><h3>Servidor seleccionado: ${sel.nm}</h3>
+     <div class="meta">País: ${sel.pais} · Región: ${sel.zona} · Ping promedio: ${sel.ping}ms · Estado: Activo</div></div>`:''}
+   <p class="sub" style="margin-top:14px">Jugadores de distintos países conectados · Colaboración global en tiempo real</p>
+  </section>`;
+}
 
-    <section class="section anti-section"><div class="section-wrap anti-layout"><div><div class="eyebrow">EL TALENTO SE CONSTRUYE</div><h2>SISTEMA <em>ANTI-PRO</em></h2><p>El progreso se gana jugando. Los pros no lo ganan en un día. Sistema de ligas por nivel para que cada desafío sea justo.</p><div class="anti-steps"><div><b>01</b><span>Jugá 5 partidas</span></div><div><b>02</b><span>Ganá 3 partidas</span></div><div><b>03</b><span>Llegá a Top 3</span></div></div></div><div class="reward-seal"><span>RECOMPENSA</span><strong>FINAL</strong><small>FORJADA, NO REGALADA</small>✦</div></div></section>
+/* ---- IDIOMAS ---- */
+function langPage(){
+  return `<section>
+   <h2 class="sec" style="font-size:2rem">🌍 Elegí tu idioma</h2>
+   <p class="sub">Selector de idioma global · La app se adapta a tu país, diseño premium mundial</p>
+   <div class="langgrid">
+    ${LANGS.map(l=>`<button class="langbtn ${db.lang===l.id?'sel':''}" onclick="setLang('${l.id}')">
+      <span class="flag" style="background:${l.flag}"></span>${l.nm}</button>`).join('')}
+   </div>
+   <p class="sub" style="margin-top:16px">Idioma actual: <b style="color:var(--gold2)">${(LANGS.find(l=>l.id===db.lang)||{}).nm}</b> · Se aplica a toda la web al instante.</p>
+  </section>`;
+}
+function setLang(id){db.lang=id;saveDB();toast('Idioma actualizado');renderNav();render()}
 
-    <section class="section section-dark" id="idiomas"><div class="section-wrap">
-      <div class="section-heading"><div><div class="eyebrow">UNA ARENA, MUCHAS CULTURAS</div><h2>PLAYFORJA <em>GLOBAL</em></h2></div><span class="section-index">05 / CONECTÁ</span></div>
-      <div class="language-layout"><div><h3>ELEGÍ TU IDIOMA</h3><div class="country-grid"><button class="country active" data-lang="es">🇦🇷 Argentina</button><button class="country" data-lang="es">🇪🇸 España</button><button class="country" data-lang="pt">🇧🇷 Brasil</button><button class="country" data-lang="en">🇺🇸 USA</button><button class="country" data-lang="fr">🇫🇷 Francia</button><button class="country" data-lang="de">🇩🇪 Alemania</button><button class="country" data-lang="ja">🇯🇵 Japón</button><button class="country" data-lang="ja">🇰🇷 Corea</button></div><p class="language-list">Español Argentino · Português · English · Français · Deutsch · Japonés</p><p class="muted-copy">La app se adapta a tu país.</p></div><div class="hello-card"><span class="eyebrow">BIENVENIDO A LA FORJA</span><strong id="hello-text">Hola Matuu</strong><small>Olá Matuu · Hello Matuu</small></div></div>
-      <div class="world-map"><div class="map-heading"><span>◉</span> MAPA MUNDIAL PLAYFORJA</div><div class="map-regions"><article><b>LATAM</b><span>Argentina · Brasil · México</span><i>● ● ●</i></article><article><b>NA &amp; EU</b><span>USA · España · Francia</span><i>● ● ●</i></article><article><b>APAC</b><span>Japón</span><i>●</i></article></div><p>Jugadores de distintos países conectados · Colaboración global en tiempo real</p></div>
-    </div></section>
+/* ---- MISIONES / PROGRESIÓN ---- */
+function addXP(n){
+  if(!db.session)return; const u=db.users[db.session]; u.xp+=n;
+  while(u.xp>=(RANKS[Math.min(RANKS.findIndex(r=>r.nm===u.rank||0)+1,5)]||{xp:Infinity}).xp){}
+  let ri=0; RANKS.forEach((r,i)=>{if(u.xp>=r.xp)ri=i});
+  const prev=u.rank; u.rank=RANKS[ri].nm;
+  if(prev&&prev!==u.rank)toast('¡Subiste a rango '+u.rank+'!');
+}
+function claimMission(type,id,xp,cofre){
+  if(!db.session){toast('Iniciá sesión para reclamar misiones');go('cuenta');return}
+  const key=type+':'+id;
+  if(db.claims[key]){toast('Ya reclamaste esta misión');return}
+  db.claims[key]=true;
+  if(xp)addXP(xp);
+  if(cofre){const u=db.users[db.session];u.pf+=250;toast('¡'+cofre+' reclamado! +250 PF')}
+  else toast('+'+xp+' XP');
+  saveDB(); render();
+}
+function missionsPage(){
+  const u=db.users[db.session];
+  const xp=u?u.xp:0; let ri=0; RANKS.forEach((r,i)=>{if(xp>=r.xp)ri=i});
+  const cur=RANKS[ri], next=RANKS[ri+1];
+  const pct=next?Math.round((xp-cur.xp)/(next.xp-cur.xp)*100):100;
+  const block=(type,nm)=>`<div class="card"><h3>${I.shield} ${nm}</h3>
+    ${MISSIONS[type].map(m=>{const done=!!db.claims[type+':'+m.id];
+      return `<div class="mission"><div>${done?I.check:''} ${m.d}</div>
+      <div>${m.cofre?`<button class="btn-sm" ${done?'disabled':''} onclick="claimMission('${type}','${m.id}',0,'${m.cofre}')">${done?t('claimed'):t('claim')}</button>`
+      :`<button class="btn-sm" ${done?'disabled':''} onclick="claimMission('${type}','${m.id}',${m.xp})">${done?t('claimed'):'+'+m.xp+' XP'}</button>`}</div></div>`}).join('')}
+   </div>`;
+  return `<section>
+   <h2 class="sec">Progresión que no se regala</h2>
+   <p class="sub">Sistema de progresión · Español argentino</p>
+   <div class="ranks">${RANKS.map((r,i)=>`<div class="rank ${i===ri?'sel':''}">${rankSVG(r,i)}<div class="nm" style="color:${r.c}">${r.nm}</div></div>`).join('')}</div>
+   <p class="sub">${u?`Progreso actual: ${pct}% · Nivel ${cur.nm} → ${next?next.nm:'MAX'}`:'Creá tu cuenta para empezar tu progresión'}</p>
+   <div class="progressbar"><div style="width:${u?pct:68}%"></div></div>
+   <div class="grid g3" style="margin-top:18px">
+     ${block('daily','Misiones diarias')}${block('weekly','Misiones semanales')}${block('season','Misiones de temporada')}
+   </div>
+   <h2 class="sec" style="margin-top:26px">Difícil pero justo.</h2>
+   <p class="sub">No es fácil · No es imposible · Sistema de ligas por nivel</p>
+   <div class="grid g3">
+     <div class="card"><h3>${I.trophy} Etapa 1</h3><div class="meta">${t('play')}</div></div>
+     <div class="card"><h3>${I.trophy} Etapa 2</h3><div class="meta">${t('win')}</div></div>
+     <div class="card"><h3>${I.trophy} Etapa 3</h3><div class="meta">${t('top')} · recompensa final grande</div></div>
+   </div>
+  </section>`;
+}
 
-    <section class="section section-wrap" id="streaming"><div class="section-heading"><div><div class="eyebrow">LA COMPETENCIA EN DIRECTO</div><h2>STREAMING <em>EN VIVO</em></h2></div><span class="section-index">06 / MIRÁ</span></div><div class="stream-card"><div class="stream-screen"><span class="stream-live">● EN VIVO</span><div class="play-mark">▶</div><span>PLAYFORJA ARENA</span></div><div class="stream-info"><span class="eyebrow">LIGA DE FUEGO · FINALES</span><h3>CAMPEONATO EN DIRECTO</h3><p>La emoción de la arena, en tiempo real.</p><strong>◉ 128 espectadores viendo</strong><small>El reproductor oficial se habilitará cuando se conecte el canal de streaming.</small></div></div></section>
+/* ---- TEMPORADAS ---- */
+function seasonsPage(){
+  return `<section>
+   <h2 class="sec">Sistema de Temporadas y Torneos Rotativos</h2>
+   <p class="sub">Cuando termina un torneo empieza otro mejorado</p>
+   <div class="grid g3">
+    <div class="season"><div class="st">Temporada 1 · Forja Inicial</div>
+      <div class="meta" style="color:var(--green);font-weight:700;margin:6px 0">✔ Finalizada</div>
+      <div class="meta">• Primer ciclo completado<br>• Fundamos la base competitiva<br>• Recompensas iniciales desbloqueadas</div></div>
+    <div class="season"><div class="st">Temporada 2 · Forja Mejorada</div>
+      <div class="meta" style="color:var(--gold2);font-weight:700;margin:6px 0">✦ Nueva</div>
+      <div class="meta">• Nuevos mapas<br>• Nuevas misiones<br>• Balance y recompensas mejoradas<br>• Dificultad y dinámicas renovadas</div></div>
+    <div class="season"><div class="st">Próximamente</div>
+      <div class="meta" style="margin:6px 0">Temporada 3 y 4 se anuncian cuando la app se publique en esta misma web.</div>
+      <button class="btn-sm" onclick="toast('Te avisaremos cuando abra la Temporada 3')">Avisarme</button></div>
+   </div>
+   <h2 class="sec" style="margin-top:26px">Torneos que rotan y mejoran</h2>
+   <p class="sub">Nunca repetitivo · Nuevos mapas · Nuevas misiones · Sistema continuo</p>
+  </section>`;
+}
 
-    <section class="section evidence-section" id="evidencia"><div class="section-wrap">
-      <div class="section-heading"><div><div class="eyebrow">TRANSPARENCIA DEL PROYECTO</div><h2>EVIDENCIA <em>OFICIAL</em></h2></div><span class="section-index">07 / REGISTRO</span></div>
-      <p class="evidence-intro">Galería preparada para documentar la evolución real de PLAYFORJA. Las imágenes originales se incorporarán aquí sin reemplazarlas por capturas inventadas.</p>
-      <div class="evidence-grid">
-        <article><div class="evidence-placeholder">TORNEO ADAPTATIVO</div><h3>Torneo Adaptativo</h3><p>Registro visual del sistema de torneos y sus modalidades.</p></article>
-        <article><div class="evidence-placeholder">PROGRESIÓN</div><h3>Progresión</h3><p>Ligas, XP y avance competitivo.</p></article>
-        <article><div class="evidence-placeholder">TEMPORADAS</div><h3>Temporadas</h3><p>Ciclos, mapas y recompensas.</p></article>
-        <article><div class="evidence-placeholder">ANTI PRO</div><h3>Anti Pro</h3><p>Etapas de desafío y balance por nivel.</p></article>
-        <article><div class="evidence-placeholder">IDIOMAS</div><h3>Idiomas</h3><p>Experiencia internacional y localización.</p></article>
-        <article><div class="evidence-placeholder">MAPA MUNDIAL</div><h3>Mapa Mundial</h3><p>Regiones y servidores previstos.</p></article>
-        <article><div class="evidence-placeholder">HOLA MATUU · OLÁ · HELLO</div><h3>Inicio en tres idiomas</h3><p>Hola Matuu · Olá Matuu · Hello Matuu.</p></article>
-        <article><div class="evidence-placeholder">LOGO OFICIAL</div><h3>Logo oficial</h3><p>Identidad visual: corona, fuego y yunque.</p></article>
-        <article><div class="evidence-placeholder">SALAS Y MARCOS</div><h3>Salas y Marcos</h3><p>Espacios de juego y personalización del perfil.</p></article>
-      </div>
-    </div></section>
+/* ---- OTRAS PÁGINAS ---- */
+function torneosPage(){
+  const mine=db.tournaments.map((tr,i)=>{
+    const jid='ct'+i; const joined=(db.joined[jid]||[]).includes(db.session);
+    return `<div class="card"><span class="badge b-pc">${tr.plataforma}</span><h3>${tr.nm}</h3>
+     <div class="meta">Juego: ${tr.gm} · Premio: ${tr.premio} PF<br>Creado por: ${tr.by}</div>
+     <div class="joinrow"><div class="slots">👥 ${(db.joined[jid]||[]).length} anotados</div>
+     <button class="btn-sm" ${joined?'disabled':''} onclick="joinCustom('${jid}')">${joined?t('joined'):t('join')}</button></div></div>`;
+  }).join('');
+  return `<section><h2 class="sec">Torneos</h2>
+   <p class="sub">Torneos oficiales + torneos de la comunidad</p>
+   <div class="grid g3">
+    <div class="card"><span class="badge b-movil">Móvil</span><h3>Torneo de Mobile Legends</h3>
+      <div class="meta">Modo: 5v5 · Clasificatorio · Premios en créditos PF</div>
+      <div class="joinrow"><div class="slots">👥 ${(db.joined.mlbb||[]).length} anotados</div>
+      <button class="btn-sm" onclick="joinTorneo('mlbb')">${t('join')}</button></div></div>
+    <div class="card"><span class="badge b-pc">PC</span><h3>Torneo de PC Valorant</h3>
+      <div class="meta">Modo: 5v5 Spike · PC · Eliminación directa · Cupos: 32/32</div>
+      <div class="joinrow"><div class="slots">👥 ${(db.joined.valo||[]).length} anotados</div>
+      <button class="btn-sm" onclick="joinTorneo('valo')">${t('join')}</button></div></div>
+    <div class="card"><span class="badge b-movil">Móvil</span><h3>Torneo de Free Fire</h3>
+      <div class="meta">Modo: Battle Royale · Squad · Premios: Skin exclusiva</div>
+      <div class="joinrow"><div class="slots">👥 ${(db.joined.ff||[]).length} anotados</div>
+      <button class="btn-sm" onclick="joinTorneo('ff')">${t('join')}</button></div></div>
+   </div>
+   ${db.tournaments.length?`<h2 class="sec" style="margin-top:22px">Torneos de la comunidad</h2><div class="grid g3">${mine}</div>`:''}
+   <div style="text-align:center;margin-top:18px"><button class="btn-gold" onclick="crearTorneoModal()">+ CREAR TORNEO</button></div>
+  </section>`;
+}
+function joinCustom(jid){
+  if(!db.session){toast('Creá tu cuenta para anotarte');go('cuenta');return}
+  db.joined[jid]=db.joined[jid]||[];
+  if(db.joined[jid].includes(db.session))return;
+  db.joined[jid].push(db.session); addXP(100); saveDB(); toast('¡Anotado! +100 XP'); render();
+}
+function salasPage(){
+  return `<section><h2 class="sec">Salas de Juego</h2>
+   <p class="sub">Salas activas ahora · Elegí tu sala y unite</p>
+   <div class="grid g3">
+    <div class="card"><h3>${I.fire} Duelo Infernal</h3><div class="meta">1 vs 1 · Mapa Aleatorio · Premio: +100 XP · Rango Plata+</div>
+      <button class="btn-sm" onclick="enterSala('Duelo Infernal')">ENTRAR A LA SALA</button></div>
+    <div class="card"><h3>${I.moon} Torneo Nocturno</h3><div class="meta">5 vs 5 · Mód: Nocturno · Premio: Marco · Rango Oro+</div>
+      <button class="btn-sm" onclick="enterSala('Torneo Nocturno')">ENTRAR A LA SALA</button></div>
+    <div class="card"><h3>${I.shield} Sala Libre LATAM</h3><div class="meta">Servidores: Buenos Aires · São Paulo · Santiago · Ping ~30ms</div>
+      <button class="btn-sm" onclick="enterSala('Sala Libre LATAM')">ENTRAR A LA SALA</button></div>
+   </div></section>`;
+}
+function enterSala(nm){
+  if(!db.session){toast('Necesitás cuenta para entrar a las salas');go('cuenta');return}
+  addXP(20); saveDB();
+  openModal(`<h3>${nm}</h3><p class="sub" style="text-align:left">Conectado al servidor regional. Cuando la app esté publicada, acá vas a ver el chat de sala y el matchmaking en vivo.</p>
+   <button class="btn-gold" style="width:100%;justify-content:center" onclick="closeModal();toast('+20 XP por entrar a la sala');render()">LISTO</button>`);
+}
+function marcosPage(){
+  const marcos=[['Marco Leyenda','1200 PF','👑'],['Marco Fuego','800 PF','🔥'],['Marco Diamante','600 PF','💎'],['Marco Bronce','150 PF','🛡️']];
+  return `<section><h2 class="sec">Tienda de Marcos</h2>
+   <p class="sub">Sin plata real: solo Monedas PF y XP${db.session?` · Tenés ${db.users[db.session].pf} PF`:''}</p>
+   <div class="grid g4">${marcos.map((m,i)=>`<div class="card" style="text-align:center">
+     <div style="font-size:2.4rem">${m[2]}</div><h3>${m[0]}</h3><div class="meta">${m[1]}</div>
+     <button class="btn-sm" onclick="buyMarco(${i},'${m[0]}',${parseInt(m[1])})">${t('claim')}</button></div>`).join('')}</div>
+   ${db.session&&db.users[db.session].marcos&&db.users[db.session].marcos.length?`<p class="sub" style="margin-top:14px">Tus marcos: ${db.users[db.session].marcos.join(' · ')}</p>`:''}
+  </section>`;
+}
+function buyMarco(i,nm,costo){
+  if(!db.session){toast('Creá tu cuenta para comprar marcos');go('cuenta');return}
+  const u=db.users[db.session]; u.marcos=u.marcos||[];
+  if(u.marcos.includes(nm)){toast('Ya tenés ese marco');return}
+  if(u.pf<costo){toast('Te faltan PF. Completá misiones para ganar más.');go('misiones');return}
+  u.pf-=costo; u.marcos.push(nm); saveDB(); toast('¡'+nm+' comprado!'); renderNav(); render();
+}
+function streamingPage(){
+  return `<section><h2 class="sec">Streaming</h2>
+   <p class="sub">Transmisiones de la comunidad PLAYFORJA · Próximamente integración en vivo cuando se publique la app</p>
+   <div class="grid g3">
+    <div class="card"><h3>${I.tv} Finales Mobile Legends</h3><div class="meta">Estado: programado · Hoy 21:00 ART</div></div>
+    <div class="card"><h3>${I.tv} Valorant Nocturno</h3><div class="meta">Estado: programado · Hoy 22:30 ART</div></div>
+    <div class="card"><h3>${I.tv} Free Fire Squad</h3><div class="meta">Estado: programado · Hoy 20:00 ART</div></div>
+   </div></section>`;
+}
+function evidPage(){
+  return `<section><h2 class="sec">Evidencia</h2>
+   <p class="sub">Galería de logros y capturas validadas por la comunidad</p>
+   <div class="evid">
+    <div class="card"><span class="badge b-pc">Victoria 5v5</span><div class="meta">+120 XP</div></div>
+    <div class="card"><span class="badge b-movil">MVP Desquiciado</span><div class="meta">18/2/5</div></div>
+    <div class="card"><span class="badge b-pc">Top 1 · Torneo Nocturno</span><div class="meta">Marco Fuego desbloqueado</div></div>
+   </div>
+   <p class="sub" style="margin-top:14px">Políticas: juego limpio, sin dinero real, evidencia verificada por moderadores. Soporte: soporte@playforja.com</p>
+  </section>`;
+}
+function loginPage(){
+  return `<div class="authbox"><h2>${I.shield} Entrar</h2><div id="authmsg"></div>
+   <input id="auser" placeholder="Nombre de usuario"/><input id="apass" type="password" placeholder="Contraseña"/>
+   <button class="btn-gold" style="width:100%;justify-content:center" onclick="doLogin()">${t('login')}</button>
+   <div class="switch">¿No tenés cuenta? <a onclick="go('cuenta')">${t('reg')}</a></div></div>`;
+}
 
-    <section class="download-cta section-wrap" id="descargar"><div><span class="eyebrow">TU LEYENDA EMPIEZA ACÁ</span><h2>ENTRÁ A LA <em>FORJA.</em></h2><p>Prepará tu equipo. La arena te espera.</p></div><a class="btn btn-gold" href="https://github.com/MatuuCrea/PLAYFORJA" target="_blank" rel="noopener">Ver proyecto en GitHub ↗</a></section>
-  </main>
+/* ================== MODAL / RENDER ================== */
+function openModal(html){document.getElementById('modalbox').innerHTML=html;document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 
-  <footer class="site-footer"><div class="footer-brand"><strong>PLAYFORJA</strong><span>FORJÁ TU LEYENDA</span></div><div class="footer-meta"><span>Soporte 24 y 7</span><span>Argentina · GMT −3</span><a href="https://github.com/MatuuCrea" target="_blank" rel="noopener">Volver al Perfil ↗</a></div><small>© <span id="year"></span> PLAYFORJA. Todos los derechos reservados. Sin apuestas ni dinero real.</small></footer>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+function render(){
+  const pages={inicio:homePage,torneos:torneosPage,salas:salasPage,misiones:missionsPage,marcos:marcosPage,
+   temporadas:seasonsPage,streaming:streamingPage,idiomas:langPage,mapa:mapPage,evidencia:evidPage,cuenta:renderAuth,login:loginPage};
+  app.innerHTML=(pages[page]||homePage)();
+}
+renderNav(); render();
+</script>
 </body>
 </html>
